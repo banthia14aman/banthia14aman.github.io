@@ -1,0 +1,80 @@
+---
+import { principles, stats } from '../data/content';
+const loop = ['Understand', 'Design', 'Ship', 'Measure'];
+---
+<section id="approach" class="wrap">
+  <p class="eyebrow mono">How I think</p>
+  <h2 class="sec-title">Coding is not the flex. Understanding the problem is.</h2>
+  <p class="sec-sub">
+    Anyone can be handed a spec. The value is upstream: seeing what is actually slow or wasteful in
+    how work gets done, and designing the leanest solution that fixes it, with AI only where it earns its place.
+  </p>
+
+  <div class="loop" aria-label="Operating loop">
+    {loop.map((step, i) => (
+      <div class="loop-step reveal">
+        <span class="mono n">{String(i + 1).padStart(2, '0')}</span>
+        <span class="s">{step}</span>
+        {i < loop.length - 1 && <span class="arr" aria-hidden="true">→</span>}
+      </div>
+    ))}
+    <span class="loop-note mono">repeat · kaizen</span>
+  </div>
+
+  <div class="principles">
+    {principles.map((p) => (
+      <div class="pr reveal">
+        <span class="mono n">{p.n}</span>
+        <div>
+          <h3 class="display">{p.title}</h3>
+          <p>{p.body}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="stats">
+    {stats.map((s) => (
+      <div class="stat reveal">
+        <b class="display" data-count={s.value} data-suffix={s.suffix}>0</b>
+        <span>{s.label}</span>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .loop {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px;
+    margin-top: 46px; padding: 22px 24px;
+    border: 1px solid var(--faint); border-radius: 14px; background: var(--ink-2);
+  }
+  .loop-step { display: flex; align-items: center; gap: 14px; }
+  .loop-step .n { color: var(--accent); }
+  .loop-step .s { font-family: var(--font-display); font-weight: 500; font-size: clamp(18px, 2.4vw, 26px); }
+  .loop-step .arr { color: var(--dim); margin-left: 6px; }
+  .loop-note { margin-left: auto; color: var(--dim); }
+
+  .principles { margin-top: 20px; border-top: 1px solid var(--faint); }
+  .pr {
+    display: grid; grid-template-columns: 80px 1fr; gap: 24px;
+    padding: 30px 0; border-bottom: 1px solid var(--faint);
+  }
+  .pr .n { color: var(--dim); padding-top: 6px; }
+  .pr h3 { font-size: clamp(20px, 2.4vw, 30px); font-weight: 600; margin-bottom: 8px; }
+  .pr p { color: var(--dim); max-width: 68ch; font-size: 15px; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    margin-top: 46px; background: var(--faint); border: 1px solid var(--faint);
+  }
+  .stat { background: var(--ink); padding: 30px 24px; }
+  .stat b { display: block; font-size: clamp(30px, 3.6vw, 50px); color: var(--accent); font-weight: 700; }
+  .stat span { color: var(--dim); font-size: 13px; }
+
+  @media (max-width: 760px) {
+    .loop-note { margin-left: 0; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .pr { grid-template-columns: 52px 1fr; gap: 14px; }
+  }
+</style>

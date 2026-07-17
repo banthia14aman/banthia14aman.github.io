@@ -1,0 +1,32 @@
+---
+import { experience } from '../data/content';
+---
+<section id="experience" class="wrap">
+  <p class="eyebrow mono">Experience</p>
+  <h2 class="sec-title">Where I learned to own outcomes</h2>
+
+  <div class="tl">
+    {experience.map((x) => (
+      <div class="row reveal">
+        <span class="when mono">{x.when}</span>
+        <div>
+          <h3 class="display">{x.role}</h3>
+          <div class="org mono">{x.org}</div>
+          <ul>{x.points.map((p) => <li>{p}</li>)}</ul>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .tl { margin-top: 46px; border-top: 1px solid var(--faint); }
+  .row { display: grid; grid-template-columns: 200px 1fr; gap: 26px; padding: 34px 0; border-bottom: 1px solid var(--faint); }
+  .when { color: var(--dim); padding-top: 6px; }
+  h3 { font-size: clamp(19px, 2.2vw, 27px); font-weight: 600; }
+  .org { color: var(--accent); margin: 6px 0 12px; }
+  ul { list-style: none; }
+  li { color: var(--dim); font-size: 14.5px; max-width: 78ch; padding-left: 18px; position: relative; margin-bottom: 7px; }
+  li::before { content: '—'; position: absolute; left: 0; color: rgba(236,233,225,0.3); }
+  @media (max-width: 760px) { .row { grid-template-columns: 1fr; gap: 8px; } }
+</style>

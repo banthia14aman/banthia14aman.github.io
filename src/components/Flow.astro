@@ -1,0 +1,86 @@
+---
+// Animated architecture diagram for a case study. Every node maps to something
+// that exists in the real codebase.
+interface Props { name: string; }
+const { name } = Astro.props;
+
+const flows: Record<string, { caption: string; nodes: [number, number, string, string, boolean][]; wires: [number, number, number, number][] }> = {
+  sampoorna: {
+    caption: 'Agent speaks one voice note. The CRM fills itself.',
+    nodes: [
+      [20, 35, 'VOICE NOTE', 'ANY LANGUAGE', false],
+      [200, 35, 'AI PARSER', 'api/ai/chat', true],
+      [380, 35, 'LEAD UPDATE', 'Supabase', false],
+      [560, 35, 'FOLLOW-UP', 'calendar + booking', false],
+      [560, 115, 'NOTIFY', 'WhatsApp / tasks', false],
+    ],
+    wires: [[120, 60, 200, 60], [320, 60, 380, 60], [500, 60, 560, 60], [440, 85, 440, 140]],
+  },
+  trinetra: {
+    caption: 'The model proposes. Deterministic logic decides. Everything is auditable.',
+    nodes: [
+      [20, 35, 'SIGNAL FEED', 'event replay', false],
+      [180, 35, 'RE-SCORE', 'exposure graph', false],
+      [345, 35, 'LLM PROPOSER', 'option cards', true],
+      [520, 35, 'CRITIC + ARBITER', 'zero-LLM · deterministic', true],
+      [300, 115, 'AUDIT TRAIL', 'hash-chained', false],
+    ],
+    wires: [[130, 60, 180, 60], [300, 60, 345, 60], [465, 60, 520, 60], [580, 85, 360, 140]],
+  },
+  casecompass: {
+    caption: 'Every practice session sharpens the next one.',
+    nodes: [
+      [20, 35, 'STUDENT', 'case journeys', false],
+      [190, 35, 'AI INTERVIEWER', 'simulation', true],
+      [370, 35, 'TELEMETRY', 'engagement', false],
+      [545, 35, 'CLUSTERING', 'percentile ranks', false],
+      [280, 115, 'PERSONALIZED PLAN', 'targets real gaps', true],
+    ],
+    wires: [[130, 60, 190, 60], [320, 60, 370, 60], [500, 60, 545, 60], [605, 85, 340, 140]],
+  },
+};
+
+const f = flows[name];
+---
+{f && (
+  <div class="flow">
+    <div class="canvas">
+      <svg viewBox="0 0 700 175" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={f.caption}>
+        {f.wires.map((w) => (
+          <>
+            <path class="wire" d={`M${w[0]} ${w[1]} L${w[2]} ${w[3]}`} />
+            <path class="wire on" d={`M${w[0]} ${w[1]} L${w[2]} ${w[3]}`} />
+          </>
+        ))}
+        {f.nodes.map((n) => (
+          <g class={n[4] ? 'node hot' : 'node'}>
+            <rect x={n[0]} y={n[1]} width="120" height="50" rx="8" />
+            <text x={n[0] + 15} y={n[1] + 22}>{n[2]}</text>
+            <text x={n[0] + 15} y={n[1] + 38} class="tag">{n[3]}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+    <span class="cap mono">{f.caption}</span>
+  </div>
+)}
+
+<style>
+  .flow { margin-top: 28px; border: 1px solid var(--faint); border-radius: 12px; background: var(--ink-2); overflow: hidden; }
+  .canvas {
+    padding: 22px; overflow-x: auto;
+    background-image: radial-gradient(rgba(236,233,225,0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  svg { display: block; min-width: 640px; width: 100%; height: auto; }
+  .node rect { fill: #141416; stroke: rgba(236,233,225,0.16); }
+  .node.hot rect { stroke: var(--accent); }
+  .node text { fill: var(--paper); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; }
+  .node .tag { fill: var(--dim); font-size: 9px; letter-spacing: 0.04em; }
+  .node.hot .tag { fill: var(--accent); }
+  .wire { fill: none; stroke: rgba(236,233,225,0.2); stroke-width: 1.5; }
+  .wire.on { stroke: var(--accent); stroke-dasharray: 5 7; animation: dash 1.6s linear infinite; opacity: 0.8; }
+  @keyframes dash { to { stroke-dashoffset: -12; } }
+  .cap { display: block; padding: 12px 22px 16px; color: var(--dim); border-top: 1px solid var(--faint); }
+  @media (prefers-reduced-motion: reduce) { .wire.on { animation: none; } }
+</style>

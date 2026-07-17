@@ -1,0 +1,35 @@
+---
+import { profile } from '../data/content';
+---
+<footer id="contact">
+  <div class="wrap">
+    <p class="eyebrow mono" style="justify-content:center;">Have a problem worth solving?</p>
+    <p class="big display">
+      <a class="glitch" href={`mailto:${profile.email}`} data-text="Let's talk">Let's talk<span class="ext" aria-hidden="true">↗</span></a>
+    </p>
+    <div class="sub mono">
+      <a href={`mailto:${profile.email}`}>{profile.email}</a>
+      <a href={profile.github} target="_blank" rel="noopener">GitHub</a>
+      <a href={profile.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      <a href={profile.resume} target="_blank" rel="noopener">Resume</a>
+    </div>
+    <div class="fine mono">
+      <span>© 2026 {profile.name}</span>
+      <span>Designed and built end to end. Ask the agent anything.</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer { padding: clamp(110px, 16vh, 180px) 0 40px; text-align: center; }
+  .eyebrow { color: var(--accent) !important; }
+  .eyebrow::before { display: none; }
+  .big { margin-bottom: 4px; }
+  .big a { font-size: clamp(44px, 10vw, 128px); font-weight: 700; letter-spacing: -0.03em; display: inline-block; transition: color 0.2s, transform 0.3s var(--ease); }
+  .big .ext { font-size: 0.4em; vertical-align: super; color: var(--accent); }
+  .big a:hover { color: var(--accent); transform: scale(1.02); }
+  .sub { margin-top: 34px; display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; color: var(--dim); }
+  .sub a:hover { color: var(--accent); }
+  .fine { margin-top: 90px; padding-top: 20px; border-top: 1px solid var(--hair); display: flex; justify-content: space-between; color: var(--dim); }
+  @media (max-width: 640px) { .fine { flex-direction: column; gap: 6px; align-items: center; text-align: center; } }
+</style>

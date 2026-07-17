@@ -1,1 +1,11 @@
+# build + deps
+node_modules/
+dist/
+.astro/
+
+# editor / os
 .claude/
+.DS_Store
+
+# worker deps (if any)
+worker/node_modules/

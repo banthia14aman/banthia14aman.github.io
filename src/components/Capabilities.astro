@@ -1,0 +1,29 @@
+---
+import { capabilities } from '../data/content';
+---
+<section id="skills" class="wrap">
+  <p class="eyebrow mono">How I execute</p>
+  <h2 class="sec-title">Three languages, one owner</h2>
+  <p class="sec-sub">Most handoffs lose something between the business, the product, and the build. I speak all three, so the intent survives all the way to the shipped thing.</p>
+
+  <div class="grid">
+    {capabilities.map((c, i: number) => (
+      <div class="card reveal">
+        <span class="mono step">{String(i + 1).padStart(2, '0')} · {c.label}</span>
+        <p class="lead">{c.body}</p>
+        <div class="tags">{c.tags.map((t) => <span class="mono">{t}</span>)}</div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 46px; background: var(--faint); border: 1px solid var(--faint); }
+  .card { background: var(--ink); padding: 30px 26px; display: flex; flex-direction: column; gap: 16px; }
+  .step { color: var(--accent); }
+  .lead { font-size: 16px; color: var(--paper); }
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: auto; }
+  .tags span { border: 1px solid var(--faint); border-radius: 999px; padding: 6px 12px; color: var(--dim); font-size: 10.5px; transition: border-color 0.2s, color 0.2s; }
+  .tags span:hover { border-color: var(--accent); color: var(--accent); }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+</style>

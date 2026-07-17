@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+import { profile } from '../data/content';
+
+interface Props { title?: string; description?: string; }
+const {
+  title = `${profile.name} — AI Product Owner`,
+  description = 'Aman Banthia designs AI solutions end to end: business problem first, AI where it earns its place, measurable efficiency. Product owner. MBA @ IIT Delhi, ex-MathWorks.',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={profile.site} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <canvas id="symbolfield" aria-hidden="true"></canvas>
+  <div class="rails" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+  <slot />
+
+  <script>
+    import { initSymbolField } from '../scripts/symbolField';
+    initSymbolField('symbolfield');
+
+    // reveal on scroll
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add('in')),
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+    // count-up stats
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        const el = e.target as HTMLElement;
+        if (!e.isIntersecting || el.dataset.done) return;
+        el.dataset.done = '1';
+        const end = parseFloat(el.dataset.count || '0');
+        const suf = el.dataset.suffix || '';
+        const t0 = performance.now();
+        const step = (t: number) => {
+          const p = Math.min((t - t0) / 1400, 1);
+          const ease = 1 - Math.pow(1 - p, 4);
+          el.textContent = Math.round(end * ease).toLocaleString() + suf;
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => cio.observe(el));
+  </script>
+</body>
+</html>

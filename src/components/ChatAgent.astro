@@ -1,0 +1,136 @@
+---
+// AI chat agent → Cloudflare Worker proxy → OpenRouter. No emojis anywhere.
+const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
+---
+<button class="fab mono" id="chatFab" aria-label="Ask Aman's AI agent">
+  <span class="dot"></span>Ask AI
+</button>
+
+<div class="panel" id="chatPanel" role="dialog" aria-label="Aman's AI agent">
+  <div class="head">
+    <span class="avatar mono">AB</span>
+    <div>
+      <div class="t">Aman's Agent</div>
+      <div class="s mono">Answers about his work</div>
+    </div>
+    <button class="x" id="chatClose" aria-label="Close">
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+  </div>
+  <div class="msgs" id="chatMsgs">
+    <div class="msg bot">Hi. I am Aman's AI agent. Ask me about his projects, how he thinks about product, or the diagrams on this page. Or tap a question below.</div>
+  </div>
+  <div class="chips" id="chatChips">
+    <button>What has Aman built?</button>
+    <button>How does he approach product?</button>
+    <button>Why hire him for a PM role?</button>
+    <button>Explain the SampoornaCRM flow</button>
+  </div>
+  <div class="input">
+    <input id="chatText" type="text" maxlength="500" placeholder="Ask about Aman..." autocomplete="off" />
+    <button id="chatSend" aria-label="Send">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  .fab {
+    position: fixed; right: 22px; bottom: 22px; z-index: 300;
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 12px 20px; border-radius: 999px; cursor: pointer;
+    background: var(--paper); color: var(--ink); border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transition: transform 0.25s var(--ease), background 0.2s;
+  }
+  .fab:hover { transform: translateY(-2px); background: var(--accent); }
+  .fab .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink); animation: blink 1.8s ease infinite; }
+  @keyframes blink { 50% { opacity: 0.3; } }
+
+  .panel {
+    position: fixed; right: 22px; bottom: 84px; z-index: 300;
+    width: min(380px, calc(100vw - 30px)); height: min(540px, 72vh);
+    display: flex; flex-direction: column;
+    background: color-mix(in oklab, var(--ink-2) 96%, transparent);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--faint); border-radius: 16px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    opacity: 0; transform: translateY(16px) scale(0.97); pointer-events: none;
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+  }
+  .panel.open { opacity: 1; transform: none; pointer-events: auto; }
+  .head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--faint); }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--ink); display: grid; place-items: center; font-weight: 600; font-size: 11px; }
+  .head .t { font-size: 13.5px; font-weight: 600; }
+  .head .s { color: var(--dim); }
+  .head .s::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-right: 6px; vertical-align: middle; }
+  .head .x { margin-left: auto; background: none; border: none; color: var(--dim); cursor: pointer; display: grid; place-items: center; }
+  .head .x:hover { color: var(--paper); }
+  .msgs { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 86%; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.5; animation: msgin 0.35s var(--ease); }
+  @keyframes msgin { from { opacity: 0; transform: translateY(8px); } }
+  .msg.bot { align-self: flex-start; background: rgba(236,233,225,0.06); border: 1px solid var(--faint); border-bottom-left-radius: 4px; }
+  .msg.me { align-self: flex-end; background: rgba(200,255,77,0.1); border: 1px solid rgba(200,255,77,0.3); border-bottom-right-radius: 4px; }
+  .msg.typing span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--dim); margin: 0 2px; animation: bounce 1.2s ease infinite; }
+  .msg.typing span:nth-child(2) { animation-delay: 0.15s; }
+  .msg.typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce { 30% { transform: translateY(-5px); } }
+  .chips { display: flex; gap: 8px; padding: 0 16px 10px; flex-wrap: wrap; }
+  .chips button { border: 1px solid var(--faint); background: none; color: var(--dim); cursor: pointer; border-radius: 999px; padding: 6px 12px; font-size: 11.5px; font-family: var(--font-body); transition: border-color 0.2s, color 0.2s; }
+  .chips button:hover { border-color: var(--accent); color: var(--accent); }
+  .input { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--faint); }
+  .input input { flex: 1; background: rgba(236,233,225,0.05); border: 1px solid var(--faint); border-radius: 999px; padding: 10px 16px; color: var(--paper); font-family: var(--font-body); font-size: 13.5px; outline: none; }
+  .input input:focus { border-color: rgba(200,255,77,0.5); }
+  .input button { width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer; background: var(--paper); color: var(--ink); display: grid; place-items: center; transition: transform 0.2s, background 0.2s; }
+  .input button:hover { transform: scale(1.08); background: var(--accent); }
+</style>
+
+<script define:vars={{ AGENT_URL }}>
+  const panel = document.getElementById('chatPanel');
+  const msgs = document.getElementById('chatMsgs');
+  const input = document.getElementById('chatText');
+  const history = [];
+  let busy = false;
+
+  document.getElementById('chatFab').addEventListener('click', () => { panel.classList.toggle('open'); input.focus(); });
+  document.getElementById('chatClose').addEventListener('click', () => panel.classList.remove('open'));
+  document.getElementById('chatChips').addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') send(e.target.textContent);
+  });
+  document.getElementById('chatSend').addEventListener('click', () => send(input.value));
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(input.value); });
+
+  function addMsg(cls, text) {
+    const d = document.createElement('div');
+    if (cls === 'typing') { d.className = 'msg bot typing'; d.innerHTML = '<span></span><span></span><span></span>'; }
+    else { d.className = 'msg ' + cls; d.textContent = text; }
+    msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+    return d;
+  }
+
+  async function send(text) {
+    text = (text || '').trim();
+    if (!text || busy) return;
+    busy = true;
+    input.value = '';
+    addMsg('me', text);
+    history.push({ role: 'user', content: text });
+    const typing = addMsg('typing');
+    try {
+      const res = await fetch(AGENT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history.slice(-10) }),
+      });
+      const data = await res.json();
+      typing.remove();
+      const reply = data.reply || data.error || 'Something went wrong. Email amanbanthia@gmail.com.';
+      addMsg('bot', reply);
+      if (data.reply) history.push({ role: 'assistant', content: data.reply });
+    } catch {
+      typing.remove();
+      addMsg('bot', 'I cannot reach the agent right now. Email amanbanthia@gmail.com instead.');
+    }
+    busy = false;
+  }
+</script>

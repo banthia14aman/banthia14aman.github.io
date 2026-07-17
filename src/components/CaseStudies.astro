@@ -1,0 +1,47 @@
+---
+import { caseStudies } from '../data/content';
+import Flow from './Flow.astro';
+---
+<section id="work" class="wrap">
+  <p class="eyebrow mono">Selected work</p>
+  <h2 class="sec-title">Problems, and what I designed to solve them</h2>
+  <p class="sec-sub">Each of these started as a business problem, not a brief to build something. The tech is downstream.</p>
+
+  <div class="list">
+    {caseStudies.map((c) => (
+      <article class="cs reveal">
+        <div class="head">
+          <span class="mono yr">{c.year}</span>
+          <a class="name display glitch" href={c.href} target="_blank" rel="noopener" data-text={c.name}>{c.name}<span class="ext" aria-hidden="true">↗</span></a>
+          <div class="tags">{c.tags.map((t) => <span class="mono">{t}</span>)}</div>
+        </div>
+        <div class="body">
+          <div class="col"><span class="lab mono">Problem</span><p>{c.problem}</p></div>
+          <div class="col"><span class="lab mono">Solution</span><p>{c.solution}</p></div>
+          <div class="col"><span class="lab mono accent">Outcome</span><p>{c.outcome}</p></div>
+        </div>
+        {c.flow && <Flow name={c.flow} />}
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .list { margin-top: 46px; border-top: 1px solid var(--faint); }
+  .cs { padding: 40px 0; border-bottom: 1px solid var(--faint); }
+  .head { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+  .yr { color: var(--dim); }
+  .name { font-size: clamp(26px, 4vw, 46px); font-weight: 600; transition: color 0.2s; }
+  .name .ext { font-size: 0.5em; vertical-align: super; margin-left: 6px; color: var(--accent); }
+  .name:hover { color: var(--accent); }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+  .tags span { border: 1px solid var(--faint); border-radius: 999px; padding: 4px 11px; color: var(--dim); }
+  .body { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 26px; }
+  .lab { color: var(--dim); display: block; margin-bottom: 8px; }
+  .lab.accent { color: var(--accent); }
+  .col p { font-size: 14.5px; color: color-mix(in oklab, var(--paper) 82%, transparent); }
+  @media (max-width: 820px) {
+    .tags { margin-left: 0; width: 100%; }
+    .body { grid-template-columns: 1fr; gap: 18px; }
+  }
+</style>
