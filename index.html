@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMAN BANTHIA — I BUILD SOFTWARE THAT SHIPS</title>
+<meta name="description" content="Portfolio of Aman Banthia — builder of CRMs, LMS platforms, CaseCompass, Trinetra, Haptic App and more. MBA @ IIT Delhi, ex-MathWorks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --paper: #eae6dc;
+    --acid: #d8ff3e;
+    --red: #ff3b00;
+    --border: 2px solid var(--paper);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    line-height: 1.5;
+    cursor: crosshair;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--acid); color: var(--ink); }
+
+  /* grain */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    opacity: .07;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  a { color: inherit; text-decoration: none; }
+  .display { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .01em; }
+
+  /* ---------- top bar ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px;
+    background: var(--ink);
+    border-bottom: var(--border);
+    font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
+  }
+  nav .dot { color: var(--acid); }
+  nav a:hover { background: var(--acid); color: var(--ink); }
+  nav .links { display: flex; gap: 24px; }
+
+  /* ---------- hero ---------- */
+  header {
+    min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 110px 20px 0;
+    position: relative;
+  }
+  .hero-meta {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    font-size: 12px; text-transform: uppercase; letter-spacing: .12em;
+    margin-bottom: 24px;
+  }
+  .hero-meta span b { color: var(--acid); font-weight: 500; }
+  h1.display {
+    font-size: clamp(58px, 15.5vw, 240px);
+    line-height: .85;
+    margin-left: -0.04em;
+  }
+  h1 .line { display: block; overflow: hidden; }
+  h1 .line > span { display: block; transform: translateY(110%); animation: rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
+  h1 .line:nth-child(2) > span { animation-delay: .12s; color: transparent; -webkit-text-stroke: 2px var(--paper); }
+  @keyframes rise { to { transform: translateY(0); } }
+
+  /* marquee */
+  .marquee {
+    border-top: var(--border); border-bottom: var(--border);
+    overflow: hidden; white-space: nowrap;
+    background: var(--acid); color: var(--ink);
+    margin-top: 40px;
+    font-size: 14px; text-transform: uppercase; letter-spacing: .1em;
+    padding: 10px 0;
+  }
+  .marquee .track { display: inline-block; animation: scroll 22s linear infinite; }
+  .marquee span { margin: 0 28px; }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+
+  /* ---------- sections ---------- */
+  section { padding: 0 20px; }
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 60px 0 24px;
+  }
+  .section-head h2 { font-size: clamp(36px, 7vw, 90px); line-height: 1; }
+  .section-head .count { font-size: 13px; color: var(--acid); }
+
+  /* ---------- project index ---------- */
+  .projects { border-top: var(--border); }
+  .project {
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    gap: 20px; align-items: baseline;
+    padding: 28px 8px;
+    border-bottom: var(--border);
+    position: relative;
+    transition: background .18s, color .18s;
+  }
+  .project:hover { background: var(--paper); color: var(--ink); }
+  .project:hover .num { color: var(--red); }
+  .project .num { font-size: 13px; color: var(--acid); transition: color .18s; }
+  .project .name { font-size: clamp(28px, 5vw, 64px); line-height: 1; }
+  .project .tag {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+    text-align: right; max-width: 240px;
+  }
+  .project .desc {
+    grid-column: 2 / 4;
+    max-width: 680px;
+    font-size: 13px;
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height .35s ease, opacity .35s ease, margin .35s ease;
+  }
+  .project:hover .desc { max-height: 140px; opacity: 1; margin-top: 12px; }
+  .project .arrow {
+    position: absolute; right: 8px; bottom: 24px;
+    font-size: 20px; opacity: 0; transform: translateX(-10px);
+    transition: opacity .2s, transform .2s;
+  }
+  .project:hover .arrow { opacity: 1; transform: translateX(0); }
+
+  /* ---------- experience ---------- */
+  .xp { border-top: var(--border); }
+  .xp-row {
+    display: grid; grid-template-columns: 180px 1fr auto; gap: 20px;
+    padding: 26px 8px; border-bottom: var(--border); align-items: baseline;
+  }
+  .xp-row .when { font-size: 12px; color: var(--acid); letter-spacing: .08em; }
+  .xp-row .role { font-size: clamp(20px, 3vw, 34px); }
+  .xp-row .org { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; text-align: right; }
+  .xp-row .what { grid-column: 2 / 4; font-size: 13px; max-width: 680px; opacity: .8; margin-top: 6px; }
+
+  /* ---------- skills ---------- */
+  .skills-wall { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 70px; border-top: var(--border); padding-top: 30px; }
+  .skills-wall span {
+    border: 1px solid var(--paper);
+    padding: 8px 16px;
+    font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .skills-wall span:hover { background: var(--acid); color: var(--ink); border-color: var(--acid); }
+  .skills-wall .hot { background: var(--red); border-color: var(--red); color: var(--paper); }
+  .skills-wall .hot:hover { background: var(--acid); color: var(--ink); border-color: var(--acid); }
+
+  /* ---------- about ---------- */
+  .about {
+    display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px;
+    padding-top: 20px; padding-bottom: 80px;
+  }
+  .about .label { grid-column: 1 / 3; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--acid); }
+  .about .body { grid-column: 3 / 10; font-size: clamp(18px, 2.4vw, 28px); line-height: 1.45; }
+  .about .body em { font-style: normal; background: var(--red); color: var(--paper); padding: 0 6px; }
+  .stats {
+    grid-column: 10 / 13;
+    display: flex; flex-direction: column; gap: 16px;
+    font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
+  }
+  .stats b { display: block; font-size: 32px; font-family: 'Anton'; color: var(--acid); }
+
+  /* ---------- contact ---------- */
+  footer {
+    border-top: var(--border);
+    padding: 80px 20px 30px;
+    text-align: center;
+  }
+  footer .display a {
+    font-size: clamp(40px, 9vw, 140px); line-height: .95;
+    display: inline-block;
+    transition: color .15s;
+  }
+  footer .display a:hover { color: var(--acid); }
+  footer .sub { margin-top: 30px; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  footer .sub a:hover { background: var(--acid); color: var(--ink); }
+  footer .fine { margin-top: 60px; font-size: 11px; opacity: .5; display: flex; justify-content: space-between; }
+
+  /* reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 640px) {
+    .project { grid-template-columns: 40px 1fr; }
+    .project .tag { display: none; }
+    .project .desc { grid-column: 1 / 3; }
+    .xp-row { grid-template-columns: 1fr; }
+    .xp-row .org { text-align: left; }
+    .xp-row .what { grid-column: 1; }
+    .about .label { grid-column: 1 / 13; }
+    .about .body { grid-column: 1 / 13; }
+    .stats { grid-column: 1 / 13; flex-direction: row; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#top" class="display" style="font-size:16px;">AMAN BANTHIA<span class="dot">.</span></a>
+  <div class="links">
+    <a href="#work">Work</a>
+    <a href="#experience">Experience</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="hero-meta">
+    <span>Portfolio — <b>2026</b></span>
+    <span>MBA <b>@ IIT Delhi</b> · Ex-<b>MathWorks</b></span>
+    <span>New Delhi, <b>India</b></span>
+    <span>Status: <b>Open to opportunities</b></span>
+  </div>
+  <h1 class="display">
+    <span class="line"><span>I build</span></span>
+    <span class="line"><span>software</span></span>
+    <span class="line"><span>that ships.</span></span>
+  </h1>
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      <span>CRM</span><span>●</span><span>LMS</span><span>●</span><span>CaseCompass</span><span>●</span><span>Trinetra</span><span>●</span><span>Haptic App</span><span>●</span><span>Navkar Crest</span><span>●</span><span>Jain Earthmovers</span><span>●</span>
+      <span>CRM</span><span>●</span><span>LMS</span><span>●</span><span>CaseCompass</span><span>●</span><span>Trinetra</span><span>●</span><span>Haptic App</span><span>●</span><span>Navkar Crest</span><span>●</span><span>Jain Earthmovers</span><span>●</span>
+    </div>
+  </div>
+</header>
+
+<section id="work">
+  <div class="section-head">
+    <h2 class="display">Selected Work</h2>
+    <span class="count">07 PROJECTS</span>
+  </div>
+
+  <div class="projects">
+    <a class="project reveal" href="#">
+      <span class="num">01</span>
+      <span class="name display">CaseCompass</span>
+      <span class="tag">AI · Next.js · TypeScript · Supabase</span>
+      <p class="desc">An MBA case-prep platform built end to end — structured problem-solving journeys, progressive-disclosure UX, and an AI-powered interview simulator with percentile-ranking cluster analysis that personalizes prep from engagement telemetry.</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="project reveal" href="#">
+      <span class="num">02</span>
+      <span class="name display">CRM</span>
+      <span class="tag">Internal Tool · Web</span>
+      <p class="desc">A custom customer-relationship platform built from scratch — pipeline tracking, follow-ups, and reporting tailored to how the business actually works.</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="project reveal" href="#">
+      <span class="num">03</span>
+      <span class="name display">LMS</span>
+      <span class="tag">EdTech · Web</span>
+      <p class="desc">A learning management system for courses, progress tracking, and assessments — built to handle real students, not demo data.</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="project reveal" href="#">
+      <span class="num">04</span>
+      <span class="name display">Trinetra</span>
+      <span class="tag">Product · Web</span>
+      <p class="desc">Monitoring and insight platform. <!-- EDIT: what Trinetra actually does --></p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="project reveal" href="#">
+      <span class="num">05</span>
+      <span class="name display">Haptic App</span>
+      <span class="tag">Mobile · All Variants</span>
+      <p class="desc">A mobile application shipped in multiple variants — one product, several audiences.</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="project reveal" href="#">
+      <span class="num">06</span>
+      <span class="name display">Navkar Crest</span>
+      <span class="tag">Corporate Site · Web</span>
+      <p class="desc">The public face of Navkar Crest — designed, built, and shipped end to end.</p>
+      <span class="arrow">→</span>
+    </a>
+    <a class="project reveal" href="#">
+      <span class="num">07</span>
+      <span class="name display">Jain Earthmovers</span>
+      <span class="tag">Business Site · Web</span>
+      <p class="desc">A business website for a heavy-equipment company — built to bring in enquiries, not win design awards. It does both.</p>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="section-head">
+    <h2 class="display">Experience</h2>
+    <span class="count">WHERE I'VE SHIPPED</span>
+  </div>
+  <div class="xp">
+    <div class="xp-row reveal">
+      <span class="when">APR 2026 — JUN 2026</span>
+      <span class="role display">Digital Technology Intern</span>
+      <span class="org">GE Vernova</span>
+      <p class="what">Diagnosed MES adoption gaps across 8 global manufacturing sites; built an AI agent that autonomously scans dashboard coverage gaps and generates site-specific insights for regional leadership.</p>
+    </div>
+    <div class="xp-row reveal">
+      <span class="when">AUG 2024 — JUN 2025</span>
+      <span class="role display">Associate Software Engineer</span>
+      <span class="org">MathWorks India</span>
+      <p class="what">Cut core data-acquisition algorithm runtime by 30% through performance profiling; shipped C++/MATLAB fixes across 3 consecutive releases used by 10,000+ global customers. Promoted ahead of schedule.</p>
+    </div>
+    <div class="xp-row reveal">
+      <span class="when">JUL 2023 — JUL 2024</span>
+      <span class="role display">Associate, Engineering Dev Group</span>
+      <span class="org">MathWorks India</span>
+      <p class="what">Resolved 100+ cross-domain technical cases at 90%+ resolution rate across 30+ industry domains — automotive to semiconductors to academic research.</p>
+    </div>
+    <div class="xp-row reveal">
+      <span class="when">EXPECTED 2027</span>
+      <span class="role display">MBA</span>
+      <span class="org">DMS, IIT Delhi</span>
+      <p class="what">Campus Finalist, American Express Campus Challenge 2025 (Decision Science Track) — sole team selected from DMS IIT Delhi against 500+ B-school teams. B.Tech EE, MANIT Bhopal (8.21 CGPA). IEEE-published author.</p>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="section-head">
+    <h2 class="display">Stack</h2>
+    <span class="count">TOOLS OF CHOICE</span>
+  </div>
+  <div class="skills-wall reveal">
+    <span class="hot">Claude</span>
+    <span class="hot">ChatGPT</span>
+    <span class="hot">OpenRouter</span>
+    <span class="hot">AWS</span>
+    <span>Next.js</span>
+    <span>TypeScript</span>
+    <span>React</span>
+    <span>Supabase</span>
+    <span>Node.js</span>
+    <span>Python</span>
+    <span>SQL</span>
+    <span>C++</span>
+    <span>MATLAB</span>
+    <span>Power BI</span>
+    <span>Machine Learning</span>
+    <span>ETL</span>
+    <span>Prompt Engineering</span>
+    <span>Agentic Workflows</span>
+    <span>Git & GitHub</span>
+    <span>Cursor</span>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-head">
+    <h2 class="display">About</h2>
+    <span class="count">WHO / WHAT</span>
+  </div>
+  <div class="about">
+    <span class="label">Profile</span>
+    <p class="body reveal">
+      I'm Aman Banthia. Engineer first, MBA in progress at IIT Delhi. I build software end to end — <em>CRMs, LMS platforms, AI products</em> and mobile apps — with AI-assisted workflows that ship faster than teams twice the size. Less talk, more shipped product.
+    </p>
+    <div class="stats reveal">
+      <div><b>07+</b> Projects shipped</div>
+      <div><b>10K+</b> Users of code I've shipped</div>
+      <div><b>99.74</b> %ile — CAT DILR & JEE Physics</div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <p style="font-size:12px; text-transform:uppercase; letter-spacing:.14em; color:var(--acid); margin-bottom:20px;">Have a project or a role in mind?</p>
+  <p class="display"><a href="mailto:amanbanthia@gmail.com">Let's talk →</a></p>
+  <div class="sub">
+    <a href="mailto:amanbanthia@gmail.com">amanbanthia@gmail.com</a>
+    <a href="https://github.com/banthia14aman" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/banthia-aman/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="resume.pdf" target="_blank">Resume ↓</a>
+  </div>
+  <div class="fine">
+    <span>© 2026 Aman Banthia</span>
+    <span>Built by hand. No templates.</span>
+  </div>
+</footer>
+
+<script>
+  // reveal on scroll
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('in')), { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
