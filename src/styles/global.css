@@ -2,12 +2,18 @@
 :root {
   --ink: #0a0a0b;
   --ink-2: #101012;
-  --paper: #ece9e1;
-  --dim: #8f8d86;
+  --paper: #ece9e1;   /* headings + emphasis only */
+  --text: #cbc8c1;    /* running prose — the readable middle tier */
+  --dim: #8f8d86;     /* metadata only: dates, labels, tags */
   --faint: rgba(236, 233, 225, 0.08);
   --hair: rgba(236, 233, 225, 0.06);
   --accent: #c8ff4d;
   --accent-2: #6ea8ff;
+
+  /* 8px spacing scale */
+  --space-1: 8px;  --space-2: 16px; --space-3: 24px;
+  --space-4: 40px; --space-5: 64px; --space-6: 96px;
+  --line-max: 64ch;
 
   --font-display: 'Bricolage Grotesque', sans-serif;
   --font-body: 'Hanken Grotesk', sans-serif;
@@ -51,7 +57,7 @@ section { padding-top: clamp(90px, 12vh, 150px); position: relative; }
 .eyebrow { color: var(--dim); display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
 .eyebrow::before { content: ''; width: 7px; height: 7px; background: var(--accent); }
 .sec-title { font-size: clamp(30px, 5vw, 62px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.05; max-width: 20ch; }
-.sec-sub { color: var(--dim); max-width: 56ch; margin-top: 16px; font-size: clamp(15px, 1.6vw, 18px); }
+.sec-sub { color: var(--text); max-width: 56ch; margin-top: 16px; font-size: clamp(15px, 1.6vw, 18px); }
 
 /* ============ reveal ============ */
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }

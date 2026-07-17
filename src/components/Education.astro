@@ -1,0 +1,30 @@
+---
+import { education } from '../data/content';
+---
+<section id="education" class="wrap">
+  <p class="eyebrow mono">Education</p>
+  <h2 class="sec-title">Where the foundation was built</h2>
+
+  <div class="grid">
+    {education.map((e) => (
+      <article class="edu reveal">
+        <span class="when mono">{e.when}</span>
+        <h3 class="display">{e.degree}</h3>
+        <div class="school">{e.school}</div>
+        <ul>{e.points.map((p) => <li>{p}</li>)}</ul>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin-top: 48px; background: var(--faint); border: 1px solid var(--faint); }
+  .edu { background: var(--ink); padding: 34px 30px; }
+  .when { color: var(--accent); }
+  h3 { font-size: clamp(22px, 2.6vw, 30px); font-weight: 600; margin: 12px 0 4px; }
+  .school { color: var(--paper); font-size: 15px; margin-bottom: 16px; }
+  ul { list-style: none; }
+  li { color: var(--text); font-size: 14.5px; padding-left: 18px; position: relative; margin-bottom: 8px; }
+  li::before { content: '—'; position: absolute; left: 0; color: rgba(236,233,225,0.3); }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+</style>

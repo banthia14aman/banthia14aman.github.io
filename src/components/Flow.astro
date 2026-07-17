@@ -1,42 +1,43 @@
 ---
-// Animated architecture diagram for a case study. Every node maps to something
-// that exists in the real codebase.
+// Architecture diagram as an auto-sizing HTML pipeline: nodes grow to fit their
+// own text, connectors flex to fill, and a clean loop-back bar shows a cycle.
 interface Props { name: string; }
 const { name } = Astro.props;
 
-const flows: Record<string, { caption: string; nodes: [number, number, string, string, boolean][]; wires: [number, number, number, number][] }> = {
+type Node = { title: string; sub: string; hot?: boolean };
+type FlowDef = { caption: string; loop?: string; nodes: Node[] };
+
+const flows: Record<string, FlowDef> = {
   sampoorna: {
     caption: 'Agent speaks one voice note. The CRM fills itself.',
     nodes: [
-      [20, 35, 'VOICE NOTE', 'ANY LANGUAGE', false],
-      [200, 35, 'AI PARSER', 'api/ai/chat', true],
-      [380, 35, 'LEAD UPDATE', 'Supabase', false],
-      [560, 35, 'FOLLOW-UP', 'calendar + booking', false],
-      [560, 115, 'NOTIFY', 'WhatsApp / tasks', false],
+      { title: 'Voice note', sub: 'any language' },
+      { title: 'AI parser', sub: 'api / ai / chat', hot: true },
+      { title: 'Lead update', sub: 'Supabase' },
+      { title: 'Follow-up', sub: 'calendar + booking' },
+      { title: 'Notify', sub: 'WhatsApp + tasks' },
     ],
-    wires: [[120, 60, 200, 60], [320, 60, 380, 60], [500, 60, 560, 60], [440, 85, 440, 140]],
   },
   trinetra: {
-    caption: 'The model proposes. Deterministic logic decides. Everything is auditable.',
+    caption: 'The model proposes. Deterministic logic decides. Every step is auditable.',
     nodes: [
-      [20, 35, 'SIGNAL FEED', 'event replay', false],
-      [180, 35, 'RE-SCORE', 'exposure graph', false],
-      [345, 35, 'LLM PROPOSER', 'option cards', true],
-      [520, 35, 'CRITIC + ARBITER', 'zero-LLM · deterministic', true],
-      [300, 115, 'AUDIT TRAIL', 'hash-chained', false],
+      { title: 'Signal feed', sub: 'event replay' },
+      { title: 'Re-score', sub: 'exposure graph' },
+      { title: 'LLM proposer', sub: 'option cards', hot: true },
+      { title: 'Critic + arbiter', sub: 'zero-LLM · deterministic', hot: true },
+      { title: 'Audit trail', sub: 'hash-chained' },
     ],
-    wires: [[130, 60, 180, 60], [300, 60, 345, 60], [465, 60, 520, 60], [580, 85, 360, 140]],
   },
   casecompass: {
     caption: 'Every practice session sharpens the next one.',
+    loop: 'personalizes the next session',
     nodes: [
-      [20, 35, 'STUDENT', 'case journeys', false],
-      [190, 35, 'AI INTERVIEWER', 'simulation', true],
-      [370, 35, 'TELEMETRY', 'engagement', false],
-      [545, 35, 'CLUSTERING', 'percentile ranks', false],
-      [280, 115, 'PERSONALIZED PLAN', 'targets real gaps', true],
+      { title: 'Student', sub: 'case journeys' },
+      { title: 'AI interviewer', sub: 'simulation', hot: true },
+      { title: 'Telemetry', sub: 'engagement' },
+      { title: 'Clustering', sub: 'percentile ranks' },
+      { title: 'Personalized plan', sub: 'targets real gaps', hot: true },
     ],
-    wires: [[130, 60, 190, 60], [320, 60, 370, 60], [500, 60, 545, 60], [605, 85, 340, 140]],
   },
 };
 
@@ -44,43 +45,104 @@ const f = flows[name];
 ---
 {f && (
   <div class="flow">
-    <div class="canvas">
-      <svg viewBox="0 0 700 175" xmlns="http://www.w3.org/2000/svg" role="img" aria-label={f.caption}>
-        {f.wires.map((w) => (
-          <>
-            <path class="wire" d={`M${w[0]} ${w[1]} L${w[2]} ${w[3]}`} />
-            <path class="wire on" d={`M${w[0]} ${w[1]} L${w[2]} ${w[3]}`} />
-          </>
-        ))}
-        {f.nodes.map((n) => (
-          <g class={n[4] ? 'node hot' : 'node'}>
-            <rect x={n[0]} y={n[1]} width="120" height="50" rx="8" />
-            <text x={n[0] + 15} y={n[1] + 22}>{n[2]}</text>
-            <text x={n[0] + 15} y={n[1] + 38} class="tag">{n[3]}</text>
-          </g>
-        ))}
-      </svg>
+    <div class="pipe">
+      {f.nodes.map((n, i) => (
+        <>
+          <div class={`node${n.hot ? ' hot' : ''}`}>
+            <span class="nt mono">{n.title}</span>
+            <span class="ns mono">{n.sub}</span>
+          </div>
+          {i < f.nodes.length - 1 && (
+            <div class="conn" aria-hidden="true"><span class="ln"></span><span class="ar">&rsaquo;</span></div>
+          )}
+        </>
+      ))}
     </div>
-    <span class="cap mono">{f.caption}</span>
+    {f.loop && (
+      <div class="loop" aria-hidden="true">
+        <span class="ico">&#8635;</span>
+        <span class="ln"></span>
+        <span class="lbl mono">{f.loop}</span>
+        <span class="ln"></span>
+      </div>
+    )}
+    <p class="cap mono">{f.caption}</p>
   </div>
 )}
 
 <style>
-  .flow { margin-top: 28px; border: 1px solid var(--faint); border-radius: 12px; background: var(--ink-2); overflow: hidden; }
-  .canvas {
-    padding: 22px; overflow-x: auto;
-    background-image: radial-gradient(rgba(236,233,225,0.06) 1px, transparent 1px);
-    background-size: 22px 22px;
+  .flow {
+    margin-top: 26px;
+    border: 1px solid var(--faint);
+    border-radius: 14px;
+    background: var(--ink-2);
+    overflow: hidden;
   }
-  svg { display: block; min-width: 640px; width: 100%; height: auto; }
-  .node rect { fill: #141416; stroke: rgba(236,233,225,0.16); }
-  .node.hot rect { stroke: var(--accent); }
-  .node text { fill: var(--paper); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; }
-  .node .tag { fill: var(--dim); font-size: 9px; letter-spacing: 0.04em; }
-  .node.hot .tag { fill: var(--accent); }
-  .wire { fill: none; stroke: rgba(236,233,225,0.2); stroke-width: 1.5; }
-  .wire.on { stroke: var(--accent); stroke-dasharray: 5 7; animation: dash 1.6s linear infinite; opacity: 0.8; }
-  @keyframes dash { to { stroke-dashoffset: -12; } }
-  .cap { display: block; padding: 12px 22px 16px; color: var(--dim); border-top: 1px solid var(--faint); }
-  @media (prefers-reduced-motion: reduce) { .wire.on { animation: none; } }
+  .pipe {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 30px 26px;
+    overflow-x: auto;
+    background-image: radial-gradient(rgba(236, 233, 225, 0.05) 1px, transparent 1px);
+    background-size: 22px 22px;
+    scrollbar-width: thin;
+  }
+  .node {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 14px 18px;
+    border: 1px solid rgba(236, 233, 225, 0.14);
+    border-radius: 10px;
+    background: #141416;
+    white-space: nowrap;
+  }
+  .node.hot {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(200, 255, 77, 0.15), 0 0 24px -8px rgba(200, 255, 77, 0.4);
+  }
+  .nt { color: var(--paper); letter-spacing: 0.08em; font-size: 11px; }
+  .ns { color: var(--dim); font-size: 9.5px; letter-spacing: 0.06em; text-transform: none; }
+  .node.hot .nt { color: var(--accent); }
+
+  .conn { flex: 1 1 auto; min-width: 40px; display: flex; align-items: center; }
+  .conn .ln {
+    flex: 1;
+    height: 2px;
+    background-image: linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 13px);
+    background-size: 13px 2px;
+    opacity: 0.55;
+    animation: flowdash 1.6s linear infinite;
+  }
+  .conn .ar { color: var(--accent); font-size: 16px; margin-left: 2px; opacity: 0.8; }
+  @keyframes flowdash { to { background-position: 13px 0; } }
+
+  .loop {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 30px 4px;
+    margin-top: -6px;
+  }
+  .loop .ico { color: var(--accent); font-size: 15px; }
+  .loop .ln {
+    flex: 1;
+    height: 1px;
+    background-image: linear-gradient(90deg, rgba(200, 255, 77, 0.5) 0 5px, transparent 5px 11px);
+    background-size: 11px 1px;
+  }
+  .loop .lbl { color: var(--dim); text-transform: none; letter-spacing: 0.06em; white-space: nowrap; }
+
+  .cap {
+    display: block;
+    padding: 14px 26px 16px;
+    color: var(--dim);
+    border-top: 1px solid var(--faint);
+    text-transform: none;
+    letter-spacing: 0.04em;
+  }
+
+  @media (prefers-reduced-motion: reduce) { .conn .ln { animation: none; } }
 </style>

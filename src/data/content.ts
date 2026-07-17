@@ -53,6 +53,7 @@ export type CaseStudy = {
   solution: string;
   outcome: string;
   flow?: string; // key of a flow diagram
+  shot?: string; // path to a real screenshot in /public/shots
 };
 
 export const caseStudies: CaseStudy[] = [
@@ -65,6 +66,7 @@ export const caseStudies: CaseStudy[] = [
     solution: 'A voice-first CRM: the agent speaks one note in their own language and AI logs the call, updates the lead, and books the follow-up. Click-to-call, WhatsApp, listings and automation sit underneath.',
     outcome: 'The data-entry step disappears. The CRM fills itself from how agents already work, instead of asking them to change.',
     flow: 'sampoorna',
+    shot: '/shots/sampoorna.jpg',
   },
   {
     year: '2026',
@@ -75,6 +77,7 @@ export const caseStudies: CaseStudy[] = [
     solution: 'The LLM only proposes options. A zero-LLM critic and a deterministic arbiter decide, and every decision lands in a hash-chained, replayable audit trail. Runs fully offline.',
     outcome: 'AI-speed exploration with audit-grade trust: byte-identical replays and full provenance on every number.',
     flow: 'trinetra',
+    shot: '/shots/trinetra.jpg',
   },
   {
     year: '2026',
@@ -85,6 +88,7 @@ export const caseStudies: CaseStudy[] = [
     solution: 'An AI interviewer runs realistic simulations; engagement telemetry and percentile clustering find each student’s real weak spots and reshape the plan around them.',
     outcome: 'Prep time gets spent where it moves the needle, personalized at scale instead of by a coach’s guess.',
     flow: 'casecompass',
+    shot: '/shots/casecompass.jpg',
   },
   {
     year: '2026',
@@ -94,6 +98,7 @@ export const caseStudies: CaseStudy[] = [
     problem: 'A RERA-first academy needed to run students, teachers, and admins, but had no engineering team to maintain a heavy platform.',
     solution: 'A deliberately lean LMS: marketing site plus student, teacher, and admin portals, with all copy and course data in plain editable files. No framework, no build step.',
     outcome: 'A full academy platform that a non-technical team can actually run and edit day to day.',
+    shot: '/shots/navkar-academy.jpg',
   },
   {
     year: '2026',
@@ -103,6 +108,7 @@ export const caseStudies: CaseStudy[] = [
     problem: 'A township developer needed a launch presence for Anandam World City that felt as premium as a 180-acre integrated project.',
     solution: 'A fast static Astro site with a considered GSAP + Lenis motion system, structured so the client can confirm copy without touching code.',
     outcome: 'A credible digital front door for the project, quick to load and easy to keep current.',
+    shot: '/shots/navkar-crest.jpg',
   },
   {
     year: '2026',
@@ -112,6 +118,7 @@ export const caseStudies: CaseStudy[] = [
     problem: 'A heavy-equipment business needed enquiries, and a generic template would have said nothing about what they actually do.',
     solution: 'A dark-industrial React site with a real WebGL excavator in the hero that articulates and digs as you scroll, and a single content file so every spec and number stays editable.',
     outcome: 'A site that both converts and demonstrates capability, without locking the client out of their own content.',
+    shot: '/shots/jain.jpg',
   },
   {
     year: '2025',
@@ -162,13 +169,32 @@ export const experience: Experience[] = [
       'Redesigned cross-team feedback workflows and cut cycle time by 40% across a 10-person group.',
     ],
   },
+];
+
+export type Education = {
+  when: string;
+  degree: string;
+  school: string;
+  points: string[];
+};
+
+export const education: Education[] = [
   {
-    when: '2025 — 2027',
-    role: 'MBA · DMS, IIT Delhi',
-    org: 'B.Tech EE, MANIT Bhopal · IEEE-published author',
+    when: '2025 — 2027 (expected)',
+    degree: 'MBA · Management',
+    school: 'Department of Management Studies, IIT Delhi',
     points: [
       'Campus Finalist, American Express Campus Challenge 2025 (Decision Science): the sole team selected from DMS IIT Delhi against 500+ B-school teams.',
-      'IEEE primary author on a battery-life forecasting model (90% accuracy). 99.74 percentile in both CAT DILR and JEE Physics.',
+      '99.74 percentile in CAT 2023 (DILR).',
+    ],
+  },
+  {
+    when: '2019 — 2023',
+    degree: 'B.Tech · Electrical Engineering',
+    school: 'Maulana Azad National Institute of Technology, Bhopal (NIT Bhopal)',
+    points: [
+      'CGPA 8.21 / 10. IEEE-published primary author: a battery-life forecasting ML model reaching 90% accuracy from State-of-Health data.',
+      '99.74 percentile in JEE Mains 2019 (Physics).',
     ],
   },
 ];
