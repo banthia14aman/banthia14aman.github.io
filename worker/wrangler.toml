@@ -5,5 +5,13 @@ account_id = "f5fcca1f58582f5065f92d31afb03b7c"
 
 # Free-tier model. OpenRouter :free models are rate-limited (20 req/min;
 # 50 req/day, or 1000/day once $10 of credits has ever been purchased).
+# NOTE: even a non-free MODEL here cannot cause charges — worker.js hard-enforces
+# ':free'-only and sends provider.max_price = 0.
 [vars]
 MODEL = "meta-llama/llama-3.3-70b-instruct:free"
+
+# Abuse / runaway guard: KV-backed per-IP rate limit (worker.js caps 10/min, 30/day
+# per IP) so nobody can burn the free daily quota.
+[[kv_namespaces]]
+binding = "RL"
+id = "9470d7c3a856440da6dad10a0e43927f"

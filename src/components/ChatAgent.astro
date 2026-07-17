@@ -124,6 +124,7 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
   let voiceOn = false;      // speak replies aloud
   let listening = false;
   let lastViaVoice = false; // was the last question spoken? (drives hands-free loop)
+  let voiceTurns = 0;       // consecutive spoken turns — capped so it can't run away
 
   /* ---------- open / close (with a11y) ---------- */
   function openPanel() {
@@ -137,6 +138,7 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
     panel.inert = true;
     fab.setAttribute('aria-expanded', 'false');
     stopListening();
+    voiceTurns = 0;
     if (window.speechSynthesis) window.speechSynthesis.cancel();
     fab.focus();
   }
@@ -162,6 +164,7 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
     text = (text || '').trim();
     if (!text || busy) return;
     busy = true; lastViaVoice = !!viaVoice;
+    voiceTurns = viaVoice ? voiceTurns + 1 : 0;
     input.value = '';
     addMsg('me', text);
     history.push({ role: 'user', content: text });
@@ -201,7 +204,7 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
     const v = pickVoice(); if (v) u.voice = v;
     u.rate = 1.05; u.pitch = 1;
     // hands-free: after speaking a reply to a spoken question, listen again
-    u.onend = () => { if (voiceOn && lastViaVoice && recognition && panel.classList.contains('open')) startListening(); };
+    u.onend = () => { if (voiceOn && lastViaVoice && voiceTurns < 25 && recognition && panel.classList.contains('open')) startListening(); };
     synth.speak(u);
   }
   if (synth) {

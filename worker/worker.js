@@ -4,7 +4,24 @@
 const ALLOWED_ORIGINS = [
   'https://banthia14aman.github.io',
   'http://localhost:8321',
+  'http://localhost:4321',
 ];
+
+// ── PAID-TIER GUARDRAILS ──────────────────────────────────────────────
+// The ONLY way OpenRouter can charge is calling a non-":free" model. So we
+// (1) hard-enforce a ":free"-only allowlist, coercing anything else to a free
+// default, and (2) tell OpenRouter to reject any provider that would cost money
+// via provider.max_price = 0. Belt and suspenders: a config slip cannot bill.
+const FREE_DEFAULT = 'meta-llama/llama-3.3-70b-instruct:free';
+const FREE_MODELS = [
+  FREE_DEFAULT,
+  'qwen/qwen3-next-80b-a3b-instruct:free',
+  'nvidia/nemotron-3-super-120b-a12b:free',
+  'openai/gpt-oss-20b:free',
+];
+const isFree = (m) => typeof m === 'string' && m.endsWith(':free');
+const ZERO_PRICE = { prompt: 0, completion: 0, request: 0, image: 0, audio: 0 };
+const MAX_TOKENS = 500;
 
 const SYSTEM_PROMPT = `You are "Aman's Agent" — the conversational portfolio of Aman Banthia, embedded on his personal website. You speak about Aman in the third person, warmly and concisely, like a sharp colleague introducing him. Answers should be short (2-6 sentences) unless the visitor asks for depth. Use plain text, no markdown headers. Aman positions himself as an AI PRODUCT OWNER, not just a coder: he starts from the business problem, decides where AI actually earns its place, and ships solutions that make work measurably more efficient (Lean / Kaizen thinking). When asked why hire him, lead with product judgment and outcomes, not tech stack. "Coding is not the flex — understanding the problem is."
 
@@ -56,6 +73,13 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors(origin) });
     if (request.method !== 'POST') return new Response('POST /chat only', { status: 405 });
 
+    // Guardrail: per-IP rate limit (before any work) so nobody can spam the free quota.
+    if (env.RL) {
+      const ip = request.headers.get('CF-Connecting-IP') || 'anon';
+      const over = await rateLimited(env.RL, ip);
+      if (over) return json({ error: over }, 429, origin);
+    }
+
     if (!env.OPENROUTER_API_KEY) {
       return json({ error: 'Agent not configured yet. Email amanbanthia@gmail.com instead!' }, 503, origin);
     }
@@ -71,6 +95,10 @@ export default {
       }
     }
 
+    // Guardrail: resolve a ':free'-only model set. Anything non-free is dropped.
+    const primary = isFree(env.MODEL) ? env.MODEL : FREE_DEFAULT;
+    const models = [primary, ...FREE_MODELS].filter((m, i, a) => isFree(m) && a.indexOf(m) === i);
+
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -80,16 +108,11 @@ export default {
         'X-Title': "Aman's Portfolio Agent",
       },
       body: JSON.stringify({
-        model: env.MODEL || 'meta-llama/llama-3.3-70b-instruct:free',
-        // Free fallbacks: if the primary free model is rate-limited or down,
-        // OpenRouter routes to the next available one. All :free → stays $0.
-        models: [
-          env.MODEL || 'meta-llama/llama-3.3-70b-instruct:free',
-          'qwen/qwen3-next-80b-a3b-instruct:free',
-          'nvidia/nemotron-3-super-120b-a12b:free',
-          'openai/gpt-oss-20b:free',
-        ],
-        max_tokens: 500,
+        model: primary,
+        models, // all ':free'; OpenRouter falls back among them if one is busy
+        // Hard price ceiling: reject ANY provider that would cost money.
+        provider: { max_price: ZERO_PRICE, allow_fallbacks: true },
+        max_tokens: MAX_TOKENS,
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
       }),
     });
@@ -105,6 +128,24 @@ export default {
     return json({ reply }, 200, origin);
   },
 };
+
+// KV per-IP rate limit: 10/min and 30/day. Only counts allowed requests, so a
+// blocked burst can't inflate the counter. Returns a message string if over, else null.
+async function rateLimited(kv, ip) {
+  const now = Date.now();
+  const mKey = `rl:${ip}:m:${Math.floor(now / 60000)}`;
+  const dKey = `rl:${ip}:d:${Math.floor(now / 86400000)}`;
+  const [mRaw, dRaw] = await Promise.all([kv.get(mKey), kv.get(dKey)]);
+  const mCount = (parseInt(mRaw, 10) || 0) + 1;
+  const dCount = (parseInt(dRaw, 10) || 0) + 1;
+  if (mCount > 10) return 'You are sending messages a little fast. Give me a few seconds and try again.';
+  if (dCount > 30) return "That's the daily limit for this free demo agent. Email amanbanthia@gmail.com and Aman will reply.";
+  await Promise.all([
+    kv.put(mKey, String(mCount), { expirationTtl: 120 }),
+    kv.put(dKey, String(dCount), { expirationTtl: 90000 }),
+  ]);
+  return null;
+}
 
 function json(obj, status, origin) {
   return new Response(JSON.stringify(obj), {
