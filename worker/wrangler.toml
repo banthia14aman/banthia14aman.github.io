@@ -3,5 +3,7 @@ main = "worker.js"
 compatibility_date = "2026-07-01"
 account_id = "f5fcca1f58582f5065f92d31afb03b7c"
 
+# Free-tier model. OpenRouter :free models are rate-limited (20 req/min;
+# 50 req/day, or 1000/day once $10 of credits has ever been purchased).
 [vars]
-MODEL = "anthropic/claude-3.5-haiku"
+MODEL = "meta-llama/llama-3.3-70b-instruct:free"

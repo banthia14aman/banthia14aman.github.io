@@ -80,7 +80,15 @@ export default {
         'X-Title': "Aman's Portfolio Agent",
       },
       body: JSON.stringify({
-        model: env.MODEL || 'anthropic/claude-3.5-haiku',
+        model: env.MODEL || 'meta-llama/llama-3.3-70b-instruct:free',
+        // Free fallbacks: if the primary free model is rate-limited or down,
+        // OpenRouter routes to the next available one. All :free → stays $0.
+        models: [
+          env.MODEL || 'meta-llama/llama-3.3-70b-instruct:free',
+          'qwen/qwen3-next-80b-a3b-instruct:free',
+          'nvidia/nemotron-3-super-120b-a12b:free',
+          'openai/gpt-oss-20b:free',
+        ],
         max_tokens: 500,
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
       }),

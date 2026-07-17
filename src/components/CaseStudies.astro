@@ -75,7 +75,7 @@ import Flow from './Flow.astro';
   .shot::before, .shot::after {
     content: '';
     position: absolute; inset: 0;
-    background: var(--img) center top / cover no-repeat;
+    background-position: center top; background-size: cover; background-repeat: no-repeat;
     background-blend-mode: screen;
     mix-blend-mode: screen;
     opacity: 0;
@@ -83,6 +83,8 @@ import Flow from './Flow.astro';
   }
   .shot::before { background-color: #ff2f6e; }
   .shot::after { background-color: #2fe0ff; }
+  /* ghost image only fetched on hover — keeps all 6 shots off the initial load */
+  .shot:hover::before, .shot:hover::after { background-image: var(--img); }
   .shot .scan {
     position: absolute; inset: 0; pointer-events: none; opacity: 0;
     background: repeating-linear-gradient(0deg, rgba(0,0,0,0.14) 0 1px, transparent 1px 3px);

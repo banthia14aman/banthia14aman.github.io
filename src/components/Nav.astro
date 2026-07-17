@@ -32,5 +32,16 @@ import { profile } from '../data/content';
     transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
   .pill:hover { background: var(--accent); color: var(--ink); border-color: var(--accent); }
-  @media (max-width: 820px) { .links { display: none; } }
+  @media (max-width: 820px) {
+    nav { gap: 12px; }
+    .pill { display: none; }               /* Get in touch also lives in hero + footer */
+    .links {
+      flex: 1; min-width: 0; margin-left: 12px;
+      overflow-x: auto; white-space: nowrap; gap: 20px;
+      scrollbar-width: none;
+      -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent);
+      mask-image: linear-gradient(90deg, #000 88%, transparent);
+    }
+    .links::-webkit-scrollbar { display: none; }
+  }
 </style>
