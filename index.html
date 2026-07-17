@@ -1,214 +1,294 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="swiss">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AMAN BANTHIA — I BUILD SOFTWARE THAT SHIPS</title>
-<meta name="description" content="Portfolio of Aman Banthia — builder of CRMs, LMS platforms, CaseCompass, Trinetra, Haptic App and more. MBA @ IIT Delhi, ex-MathWorks.">
+<meta name="description" content="Portfolio of Aman Banthia — builder of CaseCompass, Trinetra, CRMs, LMS platforms, haptic apps and more. MBA @ IIT Delhi, ex-MathWorks.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* ---------- theme tokens ---------- */
   :root {
-    --ink: #0a0a0a;
-    --paper: #eae6dc;
-    --acid: #d8ff3e;
-    --red: #ff3b00;
-    --border: 2px solid var(--paper);
+    --bg: #f2f0ec;
+    --text: #1b1917;
+    --muted: #6b6660;
+    --accent: #d92b1f;
+    --hairline: rgba(27, 25, 23, .18);
+    --font-display: 'Archivo', sans-serif;
+    --font-body: 'Archivo', sans-serif;
+    --font-meta: 'Archivo', sans-serif;
+    --display-weight: 900;
+    --display-case: uppercase;
+    --meta-case: uppercase;
   }
+  [data-theme="editorial"] {
+    --bg: #faf6ef;
+    --text: #2a2420;
+    --muted: #8a7f74;
+    --accent: #7a2e2e;
+    --hairline: rgba(42, 36, 32, .16);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Newsreader', serif;
+    --font-meta: 'IBM Plex Mono', monospace;
+    --display-weight: 500;
+    --display-case: none;
+  }
+  [data-theme="archive"] {
+    --bg: #ebe4d6;
+    --text: #2b2620;
+    --muted: #7d7365;
+    --accent: #8b3a1e;
+    --hairline: rgba(43, 38, 32, .22);
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body: 'Cormorant Garamond', serif;
+    --font-meta: 'IBM Plex Mono', monospace;
+    --display-weight: 600;
+    --display-case: none;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--ink);
-    color: var(--paper);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 15px;
-    line-height: 1.5;
-    cursor: crosshair;
-    overflow-x: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    transition: background .4s ease, color .4s ease;
   }
-  ::selection { background: var(--acid); color: var(--ink); }
-
-  /* grain */
-  body::after {
-    content: '';
-    position: fixed; inset: 0;
-    pointer-events: none;
-    z-index: 999;
-    opacity: .07;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
+  [data-theme="editorial"] body { font-size: 17px; }
+  [data-theme="archive"] body { font-size: 18px; }
+  ::selection { background: var(--accent); color: var(--bg); }
   a { color: inherit; text-decoration: none; }
-  .display { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .01em; }
 
-  /* ---------- top bar ---------- */
+  .display {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    text-transform: var(--display-case);
+    letter-spacing: .005em;
+  }
+  .meta {
+    font-family: var(--font-meta);
+    font-size: 11px;
+    text-transform: var(--meta-case);
+    letter-spacing: .14em;
+    font-weight: 500;
+  }
+
+  /* ---------- nav + theme slider ---------- */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 20px;
-    background: var(--ink);
-    border-bottom: var(--border);
-    font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 16px 32px;
+    background: color-mix(in oklab, var(--bg) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--hairline);
+    transition: background .4s ease;
   }
-  nav .dot { color: var(--acid); }
-  nav a:hover { background: var(--acid); color: var(--ink); }
-  nav .links { display: flex; gap: 24px; }
+  nav .brand { font-size: 15px; }
+  nav .brand i { font-style: normal; color: var(--accent); }
+  nav .links { display: flex; gap: 22px; }
+  nav .links a:hover { color: var(--accent); }
 
-  /* ---------- hero ---------- */
+  .themer { display: flex; align-items: center; gap: 12px; }
+  .themer .t-name { min-width: 72px; text-align: right; color: var(--muted); }
+  .themer input[type=range] {
+    -webkit-appearance: none; appearance: none;
+    width: 110px; height: 18px; background: transparent; cursor: pointer;
+  }
+  .themer input[type=range]::-webkit-slider-runnable-track {
+    height: 1px; background: var(--text);
+  }
+  .themer input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 11px; height: 11px; margin-top: -5px;
+    background: var(--accent); border-radius: 50%;
+    border: none;
+  }
+  .themer input[type=range]::-moz-range-track { height: 1px; background: var(--text); }
+  .themer input[type=range]::-moz-range-thumb {
+    width: 11px; height: 11px; background: var(--accent); border-radius: 50%; border: none;
+  }
+
+  /* ---------- shared layout ---------- */
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
   header {
-    min-height: 100svh;
+    min-height: 92svh;
     display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 110px 20px 0;
-    position: relative;
+    padding-top: 110px; padding-bottom: 70px;
   }
   .hero-meta {
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-    font-size: 12px; text-transform: uppercase; letter-spacing: .12em;
-    margin-bottom: 24px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    color: var(--muted);
+    margin-bottom: 36px;
   }
-  .hero-meta span b { color: var(--acid); font-weight: 500; }
-  h1.display {
-    font-size: clamp(58px, 15.5vw, 240px);
-    line-height: .85;
-    margin-left: -0.04em;
+  .hero-meta b { color: var(--accent); font-weight: 500; }
+  h1 {
+    font-size: clamp(54px, 12.5vw, 190px);
+    line-height: .92;
+    margin-left: -0.03em;
   }
+  h1 .accent-line { color: var(--accent); }
   h1 .line { display: block; overflow: hidden; }
-  h1 .line > span { display: block; transform: translateY(110%); animation: rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
-  h1 .line:nth-child(2) > span { animation-delay: .12s; color: transparent; -webkit-text-stroke: 2px var(--paper); }
+  h1 .line > span { display: block; transform: translateY(110%); animation: rise .9s cubic-bezier(.19,1,.22,1) forwards; }
+  h1 .line:nth-child(2) > span { animation-delay: .1s; }
+  h1 .line:nth-child(3) > span { animation-delay: .2s; }
   @keyframes rise { to { transform: translateY(0); } }
 
-  /* marquee */
-  .marquee {
-    border-top: var(--border); border-bottom: var(--border);
-    overflow: hidden; white-space: nowrap;
-    background: var(--acid); color: var(--ink);
-    margin-top: 40px;
-    font-size: 14px; text-transform: uppercase; letter-spacing: .1em;
-    padding: 10px 0;
+  [data-theme="editorial"] h1 { font-size: clamp(46px, 9.5vw, 150px); line-height: 1.02; }
+  [data-theme="editorial"] h1 .accent-line { font-style: italic; }
+  [data-theme="archive"] header { text-align: center; align-items: center; }
+  [data-theme="archive"] .hero-meta { justify-content: center; gap: 28px; }
+  [data-theme="archive"] h1 { font-size: clamp(44px, 8.5vw, 130px); line-height: 1.04; margin-left: 0; }
+  [data-theme="archive"] header::after {
+    content: ''; display: block; width: 120px; height: 1px;
+    background: var(--text); margin: 44px auto 0;
   }
-  .marquee .track { display: inline-block; animation: scroll 22s linear infinite; }
-  .marquee span { margin: 0 28px; }
-  @keyframes scroll { to { transform: translateX(-50%); } }
 
-  /* ---------- sections ---------- */
-  section { padding: 0 20px; }
+  section { padding-top: 90px; }
   .section-head {
-    display: flex; align-items: baseline; justify-content: space-between;
-    padding: 60px 0 24px;
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--text);
   }
-  .section-head h2 { font-size: clamp(36px, 7vw, 90px); line-height: 1; }
-  .section-head .count { font-size: 13px; color: var(--acid); }
+  .section-head h2 { font-size: clamp(30px, 5vw, 64px); line-height: 1; }
+  .section-head .count { color: var(--muted); }
+  [data-theme="archive"] .section-head { justify-content: center; text-align: center; border-bottom: none; }
+  [data-theme="archive"] .section-head .count { display: none; }
 
-  /* ---------- project index ---------- */
-  .projects { border-top: var(--border); }
+  /* ---------- projects ---------- */
   .project {
     display: grid;
-    grid-template-columns: 70px 1fr auto;
-    gap: 20px; align-items: baseline;
-    padding: 28px 8px;
-    border-bottom: var(--border);
+    grid-template-columns: 64px 1fr auto;
+    column-gap: 24px; row-gap: 6px;
+    align-items: baseline;
+    padding: 34px 0;
+    border-bottom: 1px solid var(--hairline);
     position: relative;
-    transition: background .18s, color .18s;
   }
-  .project:hover { background: var(--paper); color: var(--ink); }
-  .project:hover .num { color: var(--red); }
-  .project .num { font-size: 13px; color: var(--acid); transition: color .18s; }
-  .project .name { font-size: clamp(28px, 5vw, 64px); line-height: 1; }
-  .project .tag {
-    font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
-    text-align: right; max-width: 240px;
+  .project .num { color: var(--accent); font-family: var(--font-meta); font-size: 12px; }
+  .project .name {
+    font-size: clamp(26px, 3.6vw, 46px);
+    line-height: 1.05;
+    transition: color .15s;
   }
+  .project:hover .name { color: var(--accent); }
+  .project .tag { color: var(--muted); text-align: right; max-width: 250px; }
   .project .desc {
-    grid-column: 2 / 4;
-    max-width: 680px;
-    font-size: 13px;
-    max-height: 0; overflow: hidden; opacity: 0;
-    transition: max-height .35s ease, opacity .35s ease, margin .35s ease;
+    grid-column: 2 / 3;
+    max-width: 66ch;
+    font-size: 14.5px;
+    color: var(--muted);
   }
-  .project:hover .desc { max-height: 140px; opacity: 1; margin-top: 12px; }
+  [data-theme="editorial"] .project .desc,
+  [data-theme="archive"] .project .desc { font-size: 16px; }
   .project .arrow {
-    position: absolute; right: 8px; bottom: 24px;
-    font-size: 20px; opacity: 0; transform: translateX(-10px);
+    position: absolute; right: 0; top: 38px;
+    font-size: 18px; color: var(--accent);
+    opacity: 0; transform: translateX(-8px);
     transition: opacity .2s, transform .2s;
   }
-  .project:hover .arrow { opacity: 1; transform: translateX(0); }
+  .project:hover .arrow { opacity: 1; transform: none; }
+
+  [data-theme="archive"] .project {
+    grid-template-columns: 1fr;
+    text-align: center;
+    row-gap: 10px;
+    padding: 44px 0;
+  }
+  [data-theme="archive"] .project .num::before { content: 'EXHIBIT '; }
+  [data-theme="archive"] .project .tag { text-align: center; max-width: none; }
+  [data-theme="archive"] .project .desc { grid-column: 1; margin: 0 auto; }
+  [data-theme="archive"] .project .arrow { display: none; }
 
   /* ---------- experience ---------- */
-  .xp { border-top: var(--border); }
   .xp-row {
-    display: grid; grid-template-columns: 180px 1fr auto; gap: 20px;
-    padding: 26px 8px; border-bottom: var(--border); align-items: baseline;
+    display: grid; grid-template-columns: 190px 1fr auto; column-gap: 24px; row-gap: 6px;
+    padding: 30px 0; border-bottom: 1px solid var(--hairline); align-items: baseline;
   }
-  .xp-row .when { font-size: 12px; color: var(--acid); letter-spacing: .08em; }
-  .xp-row .role { font-size: clamp(20px, 3vw, 34px); }
-  .xp-row .org { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; text-align: right; }
-  .xp-row .what { grid-column: 2 / 4; font-size: 13px; max-width: 680px; opacity: .8; margin-top: 6px; }
+  .xp-row .when { color: var(--accent); font-family: var(--font-meta); font-size: 12px; letter-spacing: .08em; }
+  .xp-row .role { font-size: clamp(20px, 2.6vw, 30px); line-height: 1.1; }
+  .xp-row .org { color: var(--muted); text-align: right; }
+  .xp-row .what { grid-column: 2 / 4; font-size: 14.5px; color: var(--muted); max-width: 66ch; }
+  [data-theme="editorial"] .xp-row .what,
+  [data-theme="archive"] .xp-row .what { font-size: 16px; }
+  [data-theme="archive"] .xp-row { grid-template-columns: 1fr; text-align: center; padding: 38px 0; }
+  [data-theme="archive"] .xp-row .org { text-align: center; }
+  [data-theme="archive"] .xp-row .what { grid-column: 1; margin: 0 auto; }
 
   /* ---------- skills ---------- */
-  .skills-wall { display: flex; flex-wrap: wrap; gap: 10px; padding-bottom: 70px; border-top: var(--border); padding-top: 30px; }
+  .skills-wall { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 34px; }
+  [data-theme="archive"] .skills-wall { justify-content: center; }
   .skills-wall span {
-    border: 1px solid var(--paper);
+    border: 1px solid var(--hairline);
     padding: 8px 16px;
-    font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
-    transition: background .15s, color .15s, border-color .15s;
+    font-family: var(--font-meta);
+    font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em;
+    transition: border-color .15s, color .15s;
   }
-  .skills-wall span:hover { background: var(--acid); color: var(--ink); border-color: var(--acid); }
-  .skills-wall .hot { background: var(--red); border-color: var(--red); color: var(--paper); }
-  .skills-wall .hot:hover { background: var(--acid); color: var(--ink); border-color: var(--acid); }
+  .skills-wall span:hover { border-color: var(--accent); color: var(--accent); }
+  .skills-wall .hot { border-color: var(--accent); color: var(--accent); }
 
   /* ---------- about ---------- */
-  .about {
-    display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px;
-    padding-top: 20px; padding-bottom: 80px;
-  }
-  .about .label { grid-column: 1 / 3; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--acid); }
-  .about .body { grid-column: 3 / 10; font-size: clamp(18px, 2.4vw, 28px); line-height: 1.45; }
-  .about .body em { font-style: normal; background: var(--red); color: var(--paper); padding: 0 6px; }
-  .stats {
-    grid-column: 10 / 13;
-    display: flex; flex-direction: column; gap: 16px;
-    font-size: 12px; text-transform: uppercase; letter-spacing: .1em;
-  }
-  .stats b { display: block; font-size: 32px; font-family: 'Anton'; color: var(--acid); }
+  .about { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; padding-top: 34px; }
+  .about .label { grid-column: 1 / 3; color: var(--accent); }
+  .about .body { grid-column: 3 / 10; font-size: clamp(19px, 2.3vw, 27px); line-height: 1.5; }
+  .about .body em { font-style: normal; box-shadow: inset 0 -2px 0 var(--accent); }
+  [data-theme="editorial"] .about .body em { font-style: italic; box-shadow: none; color: var(--accent); }
+  .stats { grid-column: 10 / 13; display: flex; flex-direction: column; gap: 18px; color: var(--muted); }
+  .stats b { display: block; font-size: 30px; font-family: var(--font-display); font-weight: var(--display-weight); color: var(--text); }
+  [data-theme="archive"] .about { display: block; text-align: center; }
+  [data-theme="archive"] .about .label { display: block; margin-bottom: 18px; }
+  [data-theme="archive"] .about .body { max-width: 30em; margin: 0 auto; }
+  [data-theme="archive"] .stats { flex-direction: row; justify-content: center; gap: 48px; margin-top: 36px; }
 
   /* ---------- contact ---------- */
-  footer {
-    border-top: var(--border);
-    padding: 80px 20px 30px;
-    text-align: center;
-  }
-  footer .display a {
-    font-size: clamp(40px, 9vw, 140px); line-height: .95;
+  footer { padding: 110px 32px 40px; text-align: center; }
+  footer .kicker { color: var(--accent); margin-bottom: 22px; }
+  footer .big a {
+    font-size: clamp(38px, 8vw, 120px); line-height: 1;
     display: inline-block;
     transition: color .15s;
   }
-  footer .display a:hover { color: var(--acid); }
-  footer .sub { margin-top: 30px; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
-  footer .sub a:hover { background: var(--acid); color: var(--ink); }
-  footer .fine { margin-top: 60px; font-size: 11px; opacity: .5; display: flex; justify-content: space-between; }
+  footer .big a:hover { color: var(--accent); }
+  footer .sub { margin-top: 34px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; color: var(--muted); }
+  footer .sub a:hover { color: var(--accent); }
+  footer .fine {
+    margin-top: 80px; padding-top: 18px; border-top: 1px solid var(--hairline);
+    display: flex; justify-content: space-between; color: var(--muted); font-size: 11px;
+  }
 
   /* reveal on scroll */
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s cubic-bezier(.19,1,.22,1), transform .7s cubic-bezier(.19,1,.22,1); }
   .reveal.in { opacity: 1; transform: none; }
 
-  @media (max-width: 640px) {
+  @media (max-width: 720px) {
+    nav { padding: 12px 18px; flex-wrap: wrap; }
+    nav .links { display: none; }
+    .wrap { padding: 0 18px; }
     .project { grid-template-columns: 40px 1fr; }
     .project .tag { display: none; }
     .project .desc { grid-column: 1 / 3; }
     .xp-row { grid-template-columns: 1fr; }
     .xp-row .org { text-align: left; }
     .xp-row .what { grid-column: 1; }
-    .about .label { grid-column: 1 / 13; }
-    .about .body { grid-column: 1 / 13; }
-    .stats { grid-column: 1 / 13; flex-direction: row; gap: 32px; }
+    .about .label, .about .body, .stats { grid-column: 1 / 13; }
+    .stats { flex-direction: row; gap: 28px; }
+    footer .fine { flex-direction: column; gap: 6px; align-items: center; }
   }
 </style>
 </head>
 <body>
 
-<nav>
-  <a href="#top" class="display" style="font-size:16px;">AMAN BANTHIA<span class="dot">.</span></a>
+<nav class="meta">
+  <a href="#top" class="brand display">Aman Banthia<i>.</i></a>
+  <div class="themer">
+    <span class="t-name meta" id="tName">Swiss</span>
+    <input type="range" id="tRange" min="0" max="2" step="1" value="0" aria-label="Site theme">
+  </div>
   <div class="links">
     <a href="#work">Work</a>
     <a href="#experience">Experience</a>
@@ -217,8 +297,8 @@
   </div>
 </nav>
 
-<header id="top">
-  <div class="hero-meta">
+<header id="top" class="wrap">
+  <div class="hero-meta meta">
     <span>Portfolio — <b>2026</b></span>
     <span>MBA <b>@ IIT Delhi</b> · Ex-<b>MathWorks</b></span>
     <span>New Delhi, <b>India</b></span>
@@ -226,113 +306,103 @@
   </div>
   <h1 class="display">
     <span class="line"><span>I build</span></span>
-    <span class="line"><span>software</span></span>
+    <span class="line accent-line"><span>software</span></span>
     <span class="line"><span>that ships.</span></span>
   </h1>
-  <div class="marquee" aria-hidden="true">
-    <div class="track">
-      <span>CRM</span><span>●</span><span>Navkar Academy</span><span>●</span><span>CaseCompass</span><span>●</span><span>Trinetra</span><span>●</span><span>Haptic App</span><span>●</span><span>Navkar Crest</span><span>●</span><span>Jain Earthmovers</span><span>●</span>
-      <span>CRM</span><span>●</span><span>Navkar Academy</span><span>●</span><span>CaseCompass</span><span>●</span><span>Trinetra</span><span>●</span><span>Haptic App</span><span>●</span><span>Navkar Crest</span><span>●</span><span>Jain Earthmovers</span><span>●</span>
-    </div>
-  </div>
 </header>
 
-<section id="work">
+<section id="work" class="wrap">
   <div class="section-head">
     <h2 class="display">Selected Work</h2>
-    <span class="count">07 PROJECTS</span>
+    <span class="count meta">07 Projects</span>
   </div>
 
-  <div class="projects">
-    <a class="project reveal" href="https://casecompass.in/" target="_blank" rel="noopener">
-      <span class="num">01</span>
-      <span class="name display">CaseCompass</span>
-      <span class="tag">AI · Next.js · TypeScript · Supabase</span>
-      <p class="desc">An MBA case-prep platform built end to end — structured problem-solving journeys, progressive-disclosure UX, and an AI-powered interview simulator with percentile-ranking cluster analysis that personalizes prep from engagement telemetry.</p>
-      <span class="arrow">→</span>
-    </a>
-    <a class="project reveal" href="https://salescrm-eight-zeta.vercel.app/" target="_blank" rel="noopener">
-      <span class="num">02</span>
-      <span class="name display">CRM</span>
-      <span class="tag">Internal Tool · Web</span>
-      <p class="desc">A custom customer-relationship platform built from scratch — pipeline tracking, follow-ups, and reporting tailored to how the business actually works.</p>
-      <span class="arrow">→</span>
-    </a>
-    <a class="project reveal" href="https://navkar-academy.pages.dev/" target="_blank" rel="noopener">
-      <span class="num">03</span>
-      <span class="name display">Navkar Academy</span>
-      <span class="tag">LMS · EdTech · Web</span>
-      <p class="desc">A learning management system for courses, progress tracking, and assessments — built to handle real students, not demo data.</p>
-      <span class="arrow">→</span>
-    </a>
-    <a class="project reveal" href="#">
-      <span class="num">04</span>
-      <span class="name display">Trinetra</span>
-      <span class="tag">Product · Web</span>
-      <p class="desc">Monitoring and insight platform. <!-- EDIT: what Trinetra actually does --></p>
-      <span class="arrow">→</span>
-    </a>
-    <a class="project reveal" href="https://github.com/banthia14aman/HapticVideoApp" target="_blank" rel="noopener">
-      <span class="num">05</span>
-      <span class="name display">Haptic App</span>
-      <span class="tag">iOS · SwiftUI · AVFoundation · Firebase</span>
-      <p class="desc">A family of haptic experiences — an iOS app for recording, editing and sharing videos with synchronized haptic feedback, a player for immersive haptic playback, and a web API that brings haptics-with-sound to Android browsers.</p>
-      <span class="arrow">→</span>
-    </a>
-    <a class="project reveal" href="https://navkar-crest.pages.dev/" target="_blank" rel="noopener">
-      <span class="num">06</span>
-      <span class="name display">Navkar Crest</span>
-      <span class="tag">Corporate Site · Web</span>
-      <p class="desc">The public face of Navkar Crest — designed, built, and shipped end to end.</p>
-      <span class="arrow">→</span>
-    </a>
-    <a class="project reveal" href="https://realitycrmraipur.github.io/Jain-Earthmovers/#/" target="_blank" rel="noopener">
-      <span class="num">07</span>
-      <span class="name display">Jain Earthmovers</span>
-      <span class="tag">Business Site · Web</span>
-      <p class="desc">A business website for a heavy-equipment company — built to bring in enquiries, not win design awards. It does both.</p>
-      <span class="arrow">→</span>
-    </a>
-  </div>
+  <a class="project reveal" href="https://casecompass.in/" target="_blank" rel="noopener">
+    <span class="num">01</span>
+    <span class="name display">CaseCompass</span>
+    <span class="tag meta">AI · Next.js · Supabase</span>
+    <p class="desc">India's MBA case-prep platform, built end to end: structured problem-solving journeys and an AI interview simulator with percentile-ranking cluster analysis that personalizes prep from engagement telemetry.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="project reveal" href="https://banthia14aman.github.io/ET-Hackathon/" target="_blank" rel="noopener">
+    <span class="num">02</span>
+    <span class="name display">Trinetra</span>
+    <span class="tag meta">AI · Simulation · TypeScript</span>
+    <p class="desc">A deterministic crisis-simulation engine: replays the 2026 Strait of Hormuz crisis across India's crude supply chain, with an LLM-proposed, deterministically-arbitrated Decision Charter and a hash-chained audit trail. Runs fully offline.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="project reveal" href="https://salescrm-eight-zeta.vercel.app/" target="_blank" rel="noopener">
+    <span class="num">03</span>
+    <span class="name display">CRM</span>
+    <span class="tag meta">Internal Tool · Web</span>
+    <p class="desc">A custom customer-relationship platform built from scratch: pipeline tracking, follow-ups, and reporting tailored to how the business actually works.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="project reveal" href="https://navkar-academy.pages.dev/" target="_blank" rel="noopener">
+    <span class="num">04</span>
+    <span class="name display">Navkar Academy</span>
+    <span class="tag meta">LMS · EdTech · Web</span>
+    <p class="desc">A learning management system for courses, progress tracking, and assessments, built to handle real students, not demo data.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="project reveal" href="https://github.com/banthia14aman/HapticVideoApp" target="_blank" rel="noopener">
+    <span class="num">05</span>
+    <span class="name display">Haptic App</span>
+    <span class="tag meta">iOS · SwiftUI · Firebase</span>
+    <p class="desc">A family of haptic experiences: an iOS app for recording, editing and sharing videos with synchronized haptic feedback, a player for immersive playback, and a web API bringing haptics-with-sound to Android browsers.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="project reveal" href="https://navkar-crest.pages.dev/" target="_blank" rel="noopener">
+    <span class="num">06</span>
+    <span class="name display">Navkar Crest</span>
+    <span class="tag meta">Corporate Site · Web</span>
+    <p class="desc">The public face of Navkar Crest, designed, built, and shipped end to end.</p>
+    <span class="arrow">→</span>
+  </a>
+  <a class="project reveal" href="https://realitycrmraipur.github.io/Jain-Earthmovers/#/" target="_blank" rel="noopener">
+    <span class="num">07</span>
+    <span class="name display">Jain Earthmovers</span>
+    <span class="tag meta">Business Site · Web</span>
+    <p class="desc">A business website for a heavy-equipment company, built to bring in enquiries, not win design awards. It does both.</p>
+    <span class="arrow">→</span>
+  </a>
 </section>
 
-<section id="experience">
+<section id="experience" class="wrap">
   <div class="section-head">
     <h2 class="display">Experience</h2>
-    <span class="count">WHERE I'VE SHIPPED</span>
+    <span class="count meta">Where I've shipped</span>
   </div>
-  <div class="xp">
-    <div class="xp-row reveal">
-      <span class="when">APR 2026 — JUN 2026</span>
-      <span class="role display">Digital Technology Intern</span>
-      <span class="org">GE Vernova</span>
-      <p class="what">Diagnosed MES adoption gaps across 8 global manufacturing sites; built an AI agent that autonomously scans dashboard coverage gaps and generates site-specific insights for regional leadership.</p>
-    </div>
-    <div class="xp-row reveal">
-      <span class="when">AUG 2024 — JUN 2025</span>
-      <span class="role display">Associate Software Engineer</span>
-      <span class="org">MathWorks India</span>
-      <p class="what">Cut core data-acquisition algorithm runtime by 30% through performance profiling; shipped C++/MATLAB fixes across 3 consecutive releases used by 10,000+ global customers. Promoted ahead of schedule.</p>
-    </div>
-    <div class="xp-row reveal">
-      <span class="when">JUL 2023 — JUL 2024</span>
-      <span class="role display">Associate, Engineering Dev Group</span>
-      <span class="org">MathWorks India</span>
-      <p class="what">Resolved 100+ cross-domain technical cases at 90%+ resolution rate across 30+ industry domains — automotive to semiconductors to academic research.</p>
-    </div>
-    <div class="xp-row reveal">
-      <span class="when">EXPECTED 2027</span>
-      <span class="role display">MBA</span>
-      <span class="org">DMS, IIT Delhi</span>
-      <p class="what">Campus Finalist, American Express Campus Challenge 2025 (Decision Science Track) — sole team selected from DMS IIT Delhi against 500+ B-school teams. B.Tech EE, MANIT Bhopal (8.21 CGPA). IEEE-published author.</p>
-    </div>
+  <div class="xp-row reveal">
+    <span class="when">APR 2026 — JUN 2026</span>
+    <span class="role display">Digital Technology Intern</span>
+    <span class="org meta">GE Vernova</span>
+    <p class="what">Diagnosed MES adoption gaps across 8 global manufacturing sites; built an AI agent that autonomously scans dashboard coverage gaps and generates site-specific insights for regional leadership.</p>
+  </div>
+  <div class="xp-row reveal">
+    <span class="when">AUG 2024 — JUN 2025</span>
+    <span class="role display">Associate Software Engineer</span>
+    <span class="org meta">MathWorks India</span>
+    <p class="what">Cut core data-acquisition algorithm runtime by 30% through performance profiling; shipped C++/MATLAB fixes across 3 consecutive releases used by 10,000+ global customers. Promoted ahead of schedule.</p>
+  </div>
+  <div class="xp-row reveal">
+    <span class="when">JUL 2023 — JUL 2024</span>
+    <span class="role display">Associate, Engineering Dev Group</span>
+    <span class="org meta">MathWorks India</span>
+    <p class="what">Resolved 100+ cross-domain technical cases at 90%+ resolution rate across 30+ industry domains, from automotive to semiconductors to academic research.</p>
+  </div>
+  <div class="xp-row reveal">
+    <span class="when">EXPECTED 2027</span>
+    <span class="role display">MBA</span>
+    <span class="org meta">DMS, IIT Delhi</span>
+    <p class="what">Campus Finalist, American Express Campus Challenge 2025 (Decision Science Track), sole team selected from DMS IIT Delhi against 500+ B-school teams. B.Tech EE, MANIT Bhopal (8.21 CGPA). IEEE-published author.</p>
   </div>
 </section>
 
-<section id="skills">
+<section id="skills" class="wrap">
   <div class="section-head">
     <h2 class="display">Stack</h2>
-    <span class="count">TOOLS OF CHOICE</span>
+    <span class="count meta">Tools of choice</span>
   </div>
   <div class="skills-wall reveal">
     <span class="hot">Claude</span>
@@ -358,17 +428,17 @@
   </div>
 </section>
 
-<section id="about">
+<section id="about" class="wrap">
   <div class="section-head">
     <h2 class="display">About</h2>
-    <span class="count">WHO / WHAT</span>
+    <span class="count meta">Who / What</span>
   </div>
   <div class="about">
-    <span class="label">Profile</span>
+    <span class="label meta">Profile</span>
     <p class="body reveal">
-      I'm Aman Banthia. Engineer first, MBA in progress at IIT Delhi. I build software end to end — <em>CRMs, LMS platforms, AI products</em> and mobile apps — with AI-assisted workflows that ship faster than teams twice the size. Less talk, more shipped product.
+      I'm Aman Banthia. Engineer first, MBA in progress at IIT Delhi. I build software end to end, <em>CRMs, LMS platforms, AI products</em> and mobile apps, with AI-assisted workflows that ship faster than teams twice the size. Less talk, more shipped product.
     </p>
-    <div class="stats reveal">
+    <div class="stats reveal meta">
       <div><b>07+</b> Projects shipped</div>
       <div><b>10K+</b> Users of code I've shipped</div>
       <div><b>99.74</b> %ile — CAT DILR & JEE Physics</div>
@@ -377,21 +447,36 @@
 </section>
 
 <footer id="contact">
-  <p style="font-size:12px; text-transform:uppercase; letter-spacing:.14em; color:var(--acid); margin-bottom:20px;">Have a project or a role in mind?</p>
-  <p class="display"><a href="mailto:amanbanthia@gmail.com">Let's talk →</a></p>
-  <div class="sub">
+  <p class="kicker meta">Have a project or a role in mind?</p>
+  <p class="big display"><a href="mailto:amanbanthia@gmail.com">Let's talk →</a></p>
+  <div class="sub meta">
     <a href="mailto:amanbanthia@gmail.com">amanbanthia@gmail.com</a>
     <a href="https://github.com/banthia14aman" target="_blank" rel="noopener">GitHub</a>
     <a href="https://www.linkedin.com/in/banthia-aman/" target="_blank" rel="noopener">LinkedIn</a>
     <a href="resume.pdf" target="_blank">Resume ↓</a>
   </div>
-  <div class="fine">
+  <div class="fine meta">
     <span>© 2026 Aman Banthia</span>
     <span>Built by hand. No templates.</span>
   </div>
 </footer>
 
 <script>
+  // theme slider
+  const THEMES = ['swiss', 'editorial', 'archive'];
+  const LABELS = ['Swiss', 'Editorial', 'Archive'];
+  const range = document.getElementById('tRange');
+  const tName = document.getElementById('tName');
+  function setTheme(i) {
+    i = Math.max(0, Math.min(2, i|0));
+    document.documentElement.dataset.theme = THEMES[i];
+    range.value = i;
+    tName.textContent = LABELS[i];
+    localStorage.setItem('theme', i);
+  }
+  range.addEventListener('input', () => setTheme(+range.value));
+  setTheme(+(localStorage.getItem('theme') ?? 0));
+
   // reveal on scroll
   const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('in')), { threshold: .15 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
