@@ -1,0 +1,7 @@
+name = "aman-portfolio-agent"
+main = "worker.js"
+compatibility_date = "2026-07-01"
+account_id = "f5fcca1f58582f5065f92d31afb03b7c"
+
+[vars]
+MODEL = "anthropic/claude-3.5-haiku"

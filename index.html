@@ -554,6 +554,97 @@
   </div>
 </footer>
 
+<style>
+  /* ---------- chat agent ---------- */
+  .chat-fab {
+    position: fixed; right: 24px; bottom: 24px; z-index: 300;
+    width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    color: #04121a; font-size: 24px;
+    box-shadow: 0 8px 30px rgba(62, 230, 255, .35);
+    transition: transform .25s cubic-bezier(.19,1,.22,1);
+    animation: fabpulse 3s ease infinite;
+  }
+  .chat-fab:hover { transform: scale(1.12) rotate(-6deg); }
+  @keyframes fabpulse { 50% { box-shadow: 0 8px 44px rgba(143, 107, 255, .55); } }
+
+  .chat-panel {
+    position: fixed; right: 24px; bottom: 96px; z-index: 300;
+    width: min(380px, calc(100vw - 32px)); height: min(540px, 72vh);
+    display: flex; flex-direction: column;
+    background: rgba(10, 12, 20, .92); backdrop-filter: blur(14px);
+    border: 1px solid rgba(143, 107, 255, .35); border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+    opacity: 0; transform: translateY(20px) scale(.96); pointer-events: none;
+    transition: opacity .3s cubic-bezier(.19,1,.22,1), transform .3s cubic-bezier(.19,1,.22,1);
+  }
+  .chat-panel.open { opacity: 1; transform: none; pointer-events: auto; }
+  .chat-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  .chat-head .avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--pink));
+    display: grid; place-items: center; font-size: 16px; color: #04121a; font-weight: 700;
+  }
+  .chat-head .t { font-size: 13.5px; font-weight: 600; }
+  .chat-head .s { font-size: 11px; color: var(--dim); display: flex; align-items: center; gap: 5px; }
+  .chat-head .s::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #38e17a; animation: blink 2s ease infinite; }
+  .chat-head .x { margin-left: auto; background: none; border: none; color: var(--dim); font-size: 18px; cursor: pointer; }
+  .chat-head .x:hover { color: var(--text); }
+
+  .chat-msgs { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 85%; padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; animation: msgin .35s cubic-bezier(.19,1,.22,1); }
+  @keyframes msgin { from { opacity: 0; transform: translateY(10px); } }
+  .msg.bot { align-self: flex-start; background: rgba(143, 107, 255, .14); border: 1px solid rgba(143, 107, 255, .25); border-bottom-left-radius: 4px; }
+  .msg.me { align-self: flex-end; background: rgba(62, 230, 255, .14); border: 1px solid rgba(62, 230, 255, .3); border-bottom-right-radius: 4px; }
+  .msg.typing span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--dim); margin: 0 2px; animation: bounce 1.2s ease infinite; }
+  .msg.typing span:nth-child(2) { animation-delay: .15s; }
+  .msg.typing span:nth-child(3) { animation-delay: .3s; }
+  @keyframes bounce { 30% { transform: translateY(-5px); } }
+
+  .chat-chips { display: flex; gap: 8px; padding: 0 16px 10px; flex-wrap: wrap; }
+  .chat-chips button {
+    border: 1px solid var(--line); background: none; color: var(--dim); cursor: pointer;
+    border-radius: 999px; padding: 6px 12px; font-size: 11.5px; font-family: 'Sora';
+    transition: border-color .2s, color .2s;
+  }
+  .chat-chips button:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  .chat-input { display: flex; gap: 8px; padding: 12px 14px; border-top: 1px solid var(--line); }
+  .chat-input input {
+    flex: 1; background: rgba(233, 236, 244, .06); border: 1px solid var(--line); border-radius: 999px;
+    padding: 10px 16px; color: var(--text); font-family: 'Sora'; font-size: 13.5px; outline: none;
+  }
+  .chat-input input:focus { border-color: rgba(62, 230, 255, .5); }
+  .chat-input button {
+    width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--cyan), var(--violet)); color: #04121a; font-size: 16px;
+    transition: transform .2s;
+  }
+  .chat-input button:hover { transform: scale(1.1); }
+</style>
+
+<button class="chat-fab" id="chatFab" aria-label="Chat with Aman's Agent">💬</button>
+<div class="chat-panel" id="chatPanel" role="dialog" aria-label="Aman's Agent chat">
+  <div class="chat-head">
+    <div class="avatar">A</div>
+    <div><div class="t">Aman's Agent</div><div class="s">AI · answers about Aman's work</div></div>
+    <button class="x" id="chatClose" aria-label="Close chat">✕</button>
+  </div>
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="msg bot">Hi! I'm Aman's AI agent. Ask me anything about his projects, experience, or what he's building — or tap a question below.</div>
+  </div>
+  <div class="chat-chips" id="chatChips">
+    <button>What has Aman built?</button>
+    <button>Tell me about SampoornaCRM</button>
+    <button>Why hire him for an AI product role?</button>
+    <button>A fun fact</button>
+  </div>
+  <div class="chat-input">
+    <input id="chatText" type="text" maxlength="500" placeholder="Ask about Aman…" autocomplete="off">
+    <button id="chatSend" aria-label="Send">➤</button>
+  </div>
+</div>
+
 <script>
   // rotating hero word
   const WORDS = ['AI agents.', 'voice CRMs.', 'decision engines.', 'products that ship.'];
@@ -607,6 +698,53 @@
     })(t0);
   }), { threshold: .5 });
   document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
+
+  // chat agent
+  const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
+  const panel = document.getElementById('chatPanel'), msgs = document.getElementById('chatMsgs');
+  const input = document.getElementById('chatText'), history = [];
+  document.getElementById('chatFab').addEventListener('click', () => { panel.classList.toggle('open'); input.focus(); });
+  document.getElementById('chatClose').addEventListener('click', () => panel.classList.remove('open'));
+  document.getElementById('chatChips').addEventListener('click', e => {
+    if (e.target.tagName === 'BUTTON') sendChat(e.target.textContent);
+  });
+  document.getElementById('chatSend').addEventListener('click', () => sendChat(input.value));
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(input.value); });
+
+  function addMsg(cls, text) {
+    const d = document.createElement('div');
+    d.className = 'msg ' + cls;
+    if (cls === 'typing') { d.className = 'msg bot typing'; d.innerHTML = '<span></span><span></span><span></span>'; }
+    else d.textContent = text;
+    msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+    return d;
+  }
+
+  async function sendChat(text) {
+    text = (text || '').trim();
+    if (!text || sendChat.busy) return;
+    sendChat.busy = true;
+    input.value = '';
+    addMsg('me', text);
+    history.push({ role: 'user', content: text });
+    const t = addMsg('typing');
+    try {
+      const res = await fetch(AGENT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history.slice(-10) }),
+      });
+      const data = await res.json();
+      t.remove();
+      const reply = data.reply || data.error || 'Hmm, something went wrong. Email amanbanthia@gmail.com!';
+      addMsg('bot', reply);
+      if (data.reply) history.push({ role: 'assistant', content: data.reply });
+    } catch {
+      t.remove();
+      addMsg('bot', "I can't reach the agent right now. Email amanbanthia@gmail.com instead!");
+    }
+    sendChat.busy = false;
+  }
 
   // 3D tilt cards
   document.querySelectorAll('.tilt').forEach(card => {
