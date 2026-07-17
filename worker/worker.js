@@ -17,14 +17,16 @@ Experience:
 - MathWorks India, Associate Software Engineer, Data Acquisition team (Aug 2024-Jun 2025): built the interface between MATLAB and DAQ hardware (10,000+ customers), cut a core algorithm's runtime 30%, shipped fixes across 3 releases, and delivered a remote hardware-demonstration platform for sales/marketing shown to 25+ enterprise clients. Promoted ahead of schedule.
 - MathWorks India, Engineering Development Group (Jul 2023-Jul 2024): 50% customer support / 50% development. 100+ MATLAB/Simulink support cases at 90%+ resolution across 30+ domains; synthesized 70+ customer queries into roadmap signals; cut a team's feedback cycle time 40%.
 
-Projects (all live, links on the site):
-1. SampoornaCRM — India's AI voice CRM for real-estate teams. Agents speak in their own language; it logs the call, updates the lead, books the follow-up. Click-to-call, WhatsApp, listings, automation. Built around the field reality that agents hate data entry.
-2. Trinetra — deterministic crisis-simulation engine replaying the 2026 Strait of Hormuz crisis for India's crude supply chain. LLM proposer, zero-LLM critic, deterministic arbiter, hash-chained audit trail; byte-identical replays; runs offline. Built for the ET Hackathon.
-3. CaseCompass (casecompass.in) — India's MBA case-prep platform. AI interview simulator, percentile-ranking cluster analysis, personalization from engagement telemetry. Next.js/TypeScript/Supabase.
-4. Navkar Academy — LMS with courses, progress tracking, assessments.
-5. Haptic App family — iOS app (SwiftUI/AVFoundation/Firebase) for videos with synchronized haptics, a haptic player, and a web API bringing haptics to Android browsers.
-6. Navkar Crest — corporate website, end to end.
-7. Jain Earthmovers — business website for a heavy-equipment company.
+Projects (all live, links on the site; the site's "How it works" section shows real architecture flow diagrams for the first three):
+1. SampoornaCRM — India's AI voice CRM for real-estate teams (Chhattisgarh focus). Architecture: Next.js + TypeScript + Supabase, deployed on Cloudflare. Flow: agent records a voice note in their own language → AI parser (an /api/ai/chat route) extracts intent → lead updated in Supabase → follow-up booked via built-in calendar/booking links → notifications/WhatsApp. Modules that exist in the codebase: leads, properties, campaigns, calls, offers, reports (charts), roles/stages/custom-field settings, notifications. Built around the field reality that agents hate data entry.
+2. Trinetra — deterministic crisis-simulation engine replaying the 2026 Strait of Hormuz crisis for India's crude supply chain. Flow: signal feed (event replay) → exposure-graph re-scoring → option cards across 5 levers → LLM proposer → zero-LLM critic (pure validators) → deterministic arbiter (severity lattice) → hash-chained audit trail. Byte-identical replays, full data provenance, runs offline. Built for the ET Hackathon.
+3. CaseCompass (casecompass.in) — India's MBA case-prep platform. Flow: student runs case journeys → AI interview simulator → engagement telemetry → percentile-ranking clustering → personalized prep plan (loop). Next.js/TypeScript/Supabase.
+4. Navkar Real Estate Academy — India's RERA-first real-estate academy. Marketing site plus three portals (student, teacher, admin): courses, assessments, cohorts, fees, faculty. Deliberately built with vanilla HTML/CSS/JS — no frameworks, no build step.
+5. Haptic App family — iOS app (SwiftUI/AVFoundation/Firebase) for videos with synchronized haptics, a haptic player app, and a web API bringing haptics-with-sound to Android browsers.
+6. Navkar Crest — marketing site for Navkar Crest Pvt Ltd and Anandam World City, Raipur's first fully integrated 180-acre township. Astro 5 + TypeScript static build, GSAP ScrollTrigger + SplitText + Lenis motion system, Cloudflare Pages.
+7. Jain Earthmovers — dark-industrial site for a heavy-equipment company (hydraulic excavators, Ajax mixers, earthwork contracts). Vite + React with a real WebGL 3D excavator (react-three-fiber) in the hero that articulates and digs as you scroll; whole site editable from one content file.
+
+About this website: dark minimal design inspired by AI-agency aesthetics — vertical hairlines, mono labels, animated node-flow diagrams of real product architectures ("every node exists in the code"), count-up stats, and this chat agent (a Cloudflare Worker calling an LLM via OpenRouter, knowledge base in the system prompt — no vector DB needed at this scale).
 
 Achievements: IEEE-published primary author (battery-life forecasting ML, 90% accuracy). AmEx Campus Challenge 2025 Campus Finalist, Decision Science track (sole team from DMS IIT Delhi vs 500+ teams). CAT 2023: 99.74 percentile DILR. JEE 2019: 99.74 percentile Physics.
 
