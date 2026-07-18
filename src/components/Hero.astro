@@ -121,19 +121,12 @@ import { hero, profile } from '../data/content';
       word!.classList.toggle('on', t === 'Aman');
       if (reduce) { word!.textContent = t; } else { sc.to(t); }
     }
-    pun.addEventListener('mouseenter', () => morph('Aman'));
-    pun.addEventListener('mouseleave', () => morph('Artificial'));
+    let hovered = false;
+    pun.addEventListener('mouseenter', () => { hovered = true; morph('Aman'); });
+    pun.addEventListener('mouseleave', () => { hovered = false; morph('Artificial'); });
     pun.addEventListener('click', () => morph(state === 'Aman' ? 'Artificial' : 'Aman'));
-    // one-time hint so the pun is discoverable without hovering
-    if (!reduce) {
-      setTimeout(async () => {
-        if (state !== 'Artificial') return;
-        state = 'Aman'; word.classList.add('on'); await sc.to('Aman');
-        setTimeout(async () => {
-          if (state !== 'Aman') return;
-          state = 'Artificial'; word.classList.remove('on'); await sc.to('Artificial');
-        }, 1500);
-      }, 1600);
-    }
+    // auto-cycle every few seconds so nobody needs to discover the hover
+    const flip = () => { if (!hovered && !document.hidden) morph(state === 'Aman' ? 'Artificial' : 'Aman'); };
+    setTimeout(() => { flip(); setInterval(flip, 4500); }, 1800);
   }
 </script>
