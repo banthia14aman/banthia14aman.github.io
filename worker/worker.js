@@ -131,7 +131,16 @@ export default {
     if (!res.ok) {
       const detail = await res.text();
       console.log('openrouter error', res.status, detail.slice(0, 300));
-      return json({ error: 'The agent is momentarily unavailable. Try again, or email amanbanthia@gmail.com.' }, 502, origin);
+      // Surface upstream status + sanitized message: contains no credentials and
+      // makes failures (bad key, data-policy, rate limit) diagnosable from the client.
+      let hint = '';
+      try { hint = (JSON.parse(detail)?.error?.message || '').slice(0, 160); } catch {}
+      const friendly =
+        res.status === 401 ? 'The agent key looks invalid.' :
+        res.status === 404 ? 'No free model endpoint accepted the request (check OpenRouter privacy/data-policy settings for free models).' :
+        res.status === 429 ? 'The free-tier quota is exhausted for now. Try again later, or email amanbanthia@gmail.com.' :
+        'The agent is momentarily unavailable. Try again, or email amanbanthia@gmail.com.';
+      return json({ error: friendly, upstream: res.status, hint }, 502, origin);
     }
 
     const data = await res.json();
