@@ -36,7 +36,7 @@ const loop = ['Understand', 'Design', 'Ship', 'Measure'];
   <div class="stats">
     {stats.map((s) => (
       <div class="stat reveal">
-        <b class="display" data-count={s.value} data-suffix={s.suffix}>0</b>
+        <b class="display" data-count={s.value} data-suffix={s.suffix}>{s.value.toLocaleString()}{s.suffix}</b>
         <span>{s.label}</span>
       </div>
     ))}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://banthia14aman.github.io/sitemap.xml

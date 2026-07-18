@@ -3,7 +3,6 @@
 
 const ALLOWED_ORIGINS = [
   'https://banthia14aman.github.io',
-  'http://localhost:8321',
   'http://localhost:4321',
 ];
 

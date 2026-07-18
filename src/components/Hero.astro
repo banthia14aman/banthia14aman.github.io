@@ -6,16 +6,20 @@ import { hero, profile } from '../data/content';
   <div class="hero-inner wrap">
     <div class="eyebrow mono" style="border:none;padding:0;">
       {hero.eyebrow.map((e) => <span class="tag">{e}</span>)}
+      <span class="tag status">{profile.status}</span>
     </div>
     <h1 class="display">
       <span class="glitch" data-text={hero.lead}>{hero.lead}</span>
     </h1>
 
-    <p class="ai-pun" id="aiPun" title="Hover me" aria-label="AI, as in Aman Intelligence">
-      <span class="k mono">AI</span>
-      <span class="eq">=</span>
-      <span class="swap" id="aiWord">Artificial</span>
-      <span class="tail">Intelligence</span>
+    <p class="ai-pun" id="aiPun">
+      <span class="sr-only">AI, as in Aman Intelligence.</span>
+      <span aria-hidden="true">
+        <span class="k mono">AI</span>
+        <span class="eq">=</span>
+        <span class="swap" id="aiWord">Artificial</span>
+        <span class="tail">Intelligence</span>
+      </span>
     </p>
 
     <p class="sub">{hero.sub}</p>
@@ -52,6 +56,7 @@ import { hero, profile } from '../data/content';
     font-size: clamp(19px, 3vw, 33px);
     cursor: pointer; user-select: none;
   }
+  .tag.status { color: var(--accent); }
   .ai-pun .k {
     font-size: 0.42em; letter-spacing: 0.22em; color: var(--dim);
     border: 1px solid var(--faint); border-radius: 6px; padding: 4px 8px;
@@ -71,8 +76,8 @@ import { hero, profile } from '../data/content';
 </style>
 
 <script>
-  import { initHero3D } from '../scripts/hero3d';
-  const start = () => initHero3D('hero3d');
+  // dynamic import keeps three.js (~118KB gz) off the critical path entirely
+  const start = () => import('../scripts/hero3d').then((m) => m.initHero3D('hero3d'));
   if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 1200 });
   else setTimeout(start, 300);
 

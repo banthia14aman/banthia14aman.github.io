@@ -14,9 +14,9 @@ export const profile = {
 };
 
 export const hero = {
-  eyebrow: ['Product', 'AI Solutions', 'Lean · Kaizen'],
+  eyebrow: ['Product', 'AI Solutions', 'Lean + Kaizen'],
   lead: 'I design AI solutions.',
-  sub: "Product owner, not just a builder. I start with the business problem, find where AI actually earns its place, and ship solutions that make people's work measurably more efficient. Understand, design, ship, measure, refine.",
+  sub: "Product owner, not just a builder. I start with the business problem, find where AI actually earns its place, and ship solutions that make people's work measurably more efficient.",
 };
 
 // The differentiator: how I think, not what I code.
@@ -67,7 +67,7 @@ export const caseStudies: CaseStudy[] = [
     solution: 'A voice-first CRM: the agent speaks one note in their own language and AI logs the call, updates the lead, and books the follow-up. Click-to-call, WhatsApp, listings and automation sit underneath.',
     outcome: 'The data-entry step disappears. The CRM fills itself from how agents already work, instead of asking them to change.',
     flow: 'sampoorna',
-    shot: '/shots/sampoorna.jpg',
+    shot: '/shots/sampoorna.webp',
     shotGlitch: ['#4361ff', '#a855f7'], // its blue→violet "by voice" gradient
   },
   {
@@ -75,11 +75,11 @@ export const caseStudies: CaseStudy[] = [
     name: 'Trinetra',
     href: 'https://banthia14aman.github.io/ET-Hackathon/',
     tags: ['Decision Systems', 'Deterministic AI', 'TypeScript'],
-    problem: 'High-stakes decisions made under pressure need to be fast, trustworthy, and auditable, but a language model on its own is none of those reliably.',
-    solution: 'The LLM only proposes options. A zero-LLM critic and a deterministic arbiter decide, and every decision lands in a hash-chained, replayable audit trail. Runs fully offline.',
-    outcome: 'AI-speed exploration with audit-grade trust: byte-identical replays and full provenance on every number.',
+    problem: 'When the Strait of Hormuz closed, India took 6 days to reroute crude. Decisions that big need AI speed, but a language model on its own is neither trustworthy nor auditable.',
+    solution: 'Trinetra replays the crisis and re-plans in about 4 minutes: the LLM only proposes options, a zero-LLM critic and deterministic arbiter decide, and every decision lands in a hash-chained, replayable audit trail. Runs fully offline.',
+    outcome: '6 days of desk work compressed to minutes, with audit-grade trust: byte-identical replays and full provenance on every number.',
     flow: 'trinetra',
-    shot: '/shots/trinetra.jpg',
+    shot: '/shots/trinetra.webp',
     shotGlitch: ['#f2a63b', '#3fd0e0'], // amber terminal + cyan supply-route lines
   },
   {
@@ -91,7 +91,7 @@ export const caseStudies: CaseStudy[] = [
     solution: 'An AI interviewer runs realistic simulations; engagement telemetry and percentile clustering find each student’s real weak spots and reshape the plan around them.',
     outcome: 'Prep time gets spent where it moves the needle, personalized at scale instead of by a coach’s guess.',
     flow: 'casecompass',
-    shot: '/shots/casecompass.jpg',
+    shot: '/shots/casecompass.webp',
     shotGlitch: ['#34d399', '#22b8cf'], // its emerald "LIVE" green + teal
   },
   {
@@ -102,7 +102,7 @@ export const caseStudies: CaseStudy[] = [
     problem: 'A RERA-first academy needed to run students, teachers, and admins, but had no engineering team to maintain a heavy platform.',
     solution: 'A deliberately lean LMS: marketing site plus student, teacher, and admin portals, with all copy and course data in plain editable files. No framework, no build step.',
     outcome: 'A full academy platform that a non-technical team can actually run and edit day to day.',
-    shot: '/shots/navkar-academy.jpg',
+    shot: '/shots/navkar-academy.webp',
     shotGlitch: ['#f5b301', '#3b6fe0'], // its gold CTA + navy/blue
   },
   {
@@ -113,7 +113,7 @@ export const caseStudies: CaseStudy[] = [
     problem: 'A township developer needed a launch presence for Anandam World City that felt as premium as a 180-acre integrated project.',
     solution: 'A fast static Astro site with a considered GSAP + Lenis motion system, structured so the client can confirm copy without touching code.',
     outcome: 'A credible digital front door for the project, quick to load and easy to keep current.',
-    shot: '/shots/navkar-crest.jpg',
+    shot: '/shots/navkar-crest.webp',
     shotGlitch: ['#c9a24b', '#3f7d5f'], // its gold linework + dark green
   },
   {
@@ -124,7 +124,7 @@ export const caseStudies: CaseStudy[] = [
     problem: 'A heavy-equipment business needed enquiries, and a generic template would have said nothing about what they actually do.',
     solution: 'A dark-industrial React site with a real WebGL excavator in the hero that articulates and digs as you scroll, and a single content file so every spec and number stays editable.',
     outcome: 'A site that both converts and demonstrates capability, without locking the client out of their own content.',
-    shot: '/shots/jain.jpg',
+    shot: '/shots/jain.webp',
     shotGlitch: ['#e0a422', '#ff7a3d'], // its amber machinery + burnt orange dust
   },
   {
@@ -148,12 +148,12 @@ export type Experience = {
 export const experience: Experience[] = [
   {
     when: 'Apr 2026 — Jun 2026',
-    role: 'Digital Technology Intern',
+    role: 'Digital Technology Program Intern',
     org: 'GE Vernova · DTDP',
     points: [
       'Owned adoption analytics for a Manufacturing Execution System used daily by 3,000+ shop-floor operators across 8+ global sites.',
       'Ran New Relic user-journey analysis to find exactly where operators dropped off, then shipped a Power BI dashboard that turned that into decisions for site leadership.',
-      'Built an AI agent that scans dashboard coverage gaps and writes site-specific insights automatically, removing a recurring manual analysis cycle.',
+      'Built an AI agent that scans dashboard coverage gaps and writes site-specific insights automatically, replacing hours of manual analysis per site with automated reporting.',
     ],
   },
   {

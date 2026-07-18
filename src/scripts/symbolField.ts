@@ -61,13 +61,22 @@ export function initSymbolField(canvasId: string): void {
   }
 
   let rt = 0;
+  let lastW = window.innerWidth, lastH = window.innerHeight;
   window.addEventListener('resize', () => {
     clearTimeout(rt);
-    rt = window.setTimeout(resize, 150);
+    rt = window.setTimeout(() => {
+      // ignore mobile URL-bar show/hide (small height-only changes) so the
+      // whole field doesn't re-randomize mid-scroll
+      const dw = Math.abs(window.innerWidth - lastW);
+      const dh = Math.abs(window.innerHeight - lastH);
+      if (dw < 2 && dh < 140) return;
+      lastW = window.innerWidth; lastH = window.innerHeight;
+      resize();
+    }, 150);
   });
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) cancelAnimationFrame(raf);
-    else raf = requestAnimationFrame(tick);
+    cancelAnimationFrame(raf); // never stack a second loop
+    if (!document.hidden) raf = requestAnimationFrame(tick);
   });
 
   resize();

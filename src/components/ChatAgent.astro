@@ -9,7 +9,7 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
   <span class="dot"></span>Ask AI
 </button>
 
-<div class="panel" id="chatPanel" role="dialog" aria-modal="true" aria-label="Aman's AI agent" inert>
+<div class="panel" id="chatPanel" role="dialog" aria-label="Aman's AI agent" inert>
   <div class="head">
     <span class="avatar mono">AB</span>
     <div>
@@ -26,7 +26,7 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
     </button>
   </div>
 
-  <div class="msgs" id="chatMsgs">
+  <div class="msgs" id="chatMsgs" aria-live="polite">
     <div class="msg bot">Hi. I am Aman's AI agent. Type a question, or tap the mic and talk to me. Turn on the speaker and I will answer out loud.</div>
   </div>
 
@@ -37,12 +37,12 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
   </div>
 
   <div class="input">
-    <button class="ico-btn mic" id="chatMic" aria-label="Speak your question" title="Speak your question" hidden>
+    <button class="ico-btn mic" id="chatMic" aria-label="Speak your question" aria-pressed="false" title="Speak your question" hidden>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>
       </svg>
     </button>
-    <input id="chatText" type="text" maxlength="500" placeholder="Ask about Aman..." autocomplete="off" />
+    <input id="chatText" type="text" maxlength="500" placeholder="Ask about Aman..." aria-label="Ask about Aman" autocomplete="off" />
     <button class="send" id="chatSend" aria-label="Send">
       <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 8h12M8 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
     </button>
@@ -150,7 +150,7 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
     if (e.target.tagName === 'BUTTON') send(e.target.textContent, false);
   });
   document.getElementById('chatSend').addEventListener('click', () => send(input.value, false));
-  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(input.value, false); });
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) send(input.value, false); });
 
   function addMsg(cls, text) {
     const d = document.createElement('div');
@@ -229,18 +229,18 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
       const transcript = e.results[0][0].transcript;
       send(transcript, true);
     };
-    recognition.onend = () => { listening = false; micBtn.classList.remove('on'); };
-    recognition.onerror = () => { listening = false; micBtn.classList.remove('on'); };
+    recognition.onend = () => { listening = false; micBtn.classList.remove('on'); micBtn.setAttribute('aria-pressed', 'false'); };
+    recognition.onerror = () => { listening = false; micBtn.classList.remove('on'); micBtn.setAttribute('aria-pressed', 'false'); };
     micBtn.addEventListener('click', () => (listening ? stopListening() : startListening()));
   }
   function startListening() {
     if (!recognition || listening) return;
     if (synth) synth.cancel();
-    try { recognition.start(); listening = true; micBtn.classList.add('on'); } catch { /* already started */ }
+    try { recognition.start(); listening = true; micBtn.classList.add('on'); micBtn.setAttribute('aria-pressed', 'true'); } catch { /* already started */ }
   }
   function stopListening() {
     if (!recognition || !listening) return;
     try { recognition.stop(); } catch {}
-    listening = false; micBtn.classList.remove('on');
+    listening = false; micBtn.classList.remove('on'); micBtn.setAttribute('aria-pressed', 'false');
   }
 </script>

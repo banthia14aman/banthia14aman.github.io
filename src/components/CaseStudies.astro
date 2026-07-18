@@ -19,7 +19,7 @@ import Flow from './Flow.astro';
         <div class={`body${c.shot ? '' : ' solo'}`}>
           {c.shot && (
             <a class="shot" href={c.href} target="_blank" rel="noopener" style={`--img:url(${c.shot});--g1:${(c.shotGlitch ?? ['#ff2f6e', '#2fe0ff'])[0]};--g2:${(c.shotGlitch ?? ['#ff2f6e', '#2fe0ff'])[1]}`} aria-label={`Open ${c.name}`}>
-              <img src={c.shot} alt={`${c.name} screenshot`} loading="lazy" width="1280" height="800" />
+              <img src={c.shot} alt={`${c.name} screenshot`} loading="lazy" decoding="async" width="1280" height="800" />
               <span class="scan" aria-hidden="true"></span>
             </a>
           )}

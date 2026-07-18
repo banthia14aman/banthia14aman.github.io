@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { profile } from '../data/content';
+---
+<Layout title="404 — Aman Banthia">
+  <section class="wrap lost">
+    <p class="eyebrow mono">404</p>
+    <h1 class="display">This page does not exist.</h1>
+    <p class="sec-sub">The portfolio is a single page — everything lives on the home page.</p>
+    <div class="row">
+      <a class="btn btn-solid" href="/">Back to the site</a>
+      <a class="btn btn-ghost" href={`mailto:${profile.email}`}>Email Aman</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .lost { min-height: 80svh; display: flex; flex-direction: column; justify-content: center; }
+  h1 { font-size: clamp(36px, 7vw, 84px); font-weight: 700; letter-spacing: -0.03em; }
+  .row { display: flex; gap: 14px; margin-top: 34px; flex-wrap: wrap; }
+</style>

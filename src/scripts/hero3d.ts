@@ -54,7 +54,8 @@ export function initHero3D(canvasId: string): void {
 
   let renderer: THREE.WebGLRenderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    // antialias off: MSAA does nothing for round point sprites, only costs GPU
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
   } catch {
     return; // no WebGL → CSS/symbol-field carry the hero
   }
@@ -129,8 +130,8 @@ export function initHero3D(canvasId: string): void {
     renderer.render(scene, camera);
   }
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) cancelAnimationFrame(raf);
-    else loop();
+    cancelAnimationFrame(raf); // never stack a second loop
+    if (!document.hidden) loop();
   });
   loop();
 }
