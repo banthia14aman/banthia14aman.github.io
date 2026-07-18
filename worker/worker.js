@@ -4,6 +4,7 @@
 const ALLOWED_ORIGINS = [
   'https://banthia14aman.github.io',
   'http://localhost:4321',
+  'http://localhost:4390',
 ];
 
 // ── PAID-TIER GUARDRAILS ──────────────────────────────────────────────
@@ -83,6 +84,13 @@ export default {
     const origin = request.headers.get('Origin') || '';
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors(origin) });
     if (request.method !== 'POST') return new Response('POST /chat only', { status: 405 });
+
+    // Guardrail: a browser Origin that isn't the allowlist means another site is
+    // trying to drive this agent. CORS only blocks the *read*, not the work/quota —
+    // so reject here before doing anything. (No-Origin clients still pass, rate-limited.)
+    if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+      return json({ error: "This agent only runs on Aman's site." }, 403, origin);
+    }
 
     // Guardrail: per-IP rate limit (before any work) so nobody can spam the free quota.
     if (env.RL) {
