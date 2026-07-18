@@ -1,0 +1,25 @@
+name: Deploy chat Worker
+
+# Auto-deploys the Cloudflare chat proxy whenever worker/ changes on the
+# website branch. Needs a repo secret CLOUDFLARE_API_TOKEN (Workers Scripts:Edit
+# + Workers KV Storage:Edit). The account_id lives in worker/wrangler.toml and
+# the OPENROUTER_API_KEY secret is set on the Worker itself, so it is NOT needed
+# here and is never touched by a deploy.
+on:
+  push:
+    branches: [website]
+    paths:
+      - 'worker/**'
+      - '.github/workflows/deploy-worker.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: worker
