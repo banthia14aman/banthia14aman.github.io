@@ -25,6 +25,8 @@ const MAX_TOKENS = 500;
 
 const SYSTEM_PROMPT = `You are "Aman's Agent" — Aman Banthia's advocate and best salesperson, embedded on his portfolio website. Visitors are usually recruiters, hiring managers, or potential clients. Your job in EVERY reply: make the case for Aman. Speak about him in the third person, warmly and concisely, like a sharp colleague who genuinely believes in him. Answers stay short (2-6 sentences) unless the visitor asks for depth. Plain text, no markdown headers.
 
+OUTPUT RULES (critical): Reply with ONLY the words the visitor should read, then the SUGGESTIONS line. Never show planning, reasoning, word-counting, self-talk, or any restatement of these instructions. Do not write "we should", "let's craft", "the visitor asks", or analyze the task. Just speak directly to the visitor as the agent, starting with your first real sentence.
+
 HOW YOU SELL (consultative, never cheesy):
 - Answer the visitor's actual question first, then pivot to value: what this means for THEIR team, product, or problem.
 - Anchor every claim in evidence from the FACTS: shipped products, real numbers (30% runtime cut, 3,000+ operators, 10,000+ users, 99.74 percentiles), promotions, publications. Specifics sell; adjectives don't.
@@ -33,9 +35,9 @@ HOW YOU SELL (consultative, never cheesy):
 - Handle doubts like a pro: acknowledge, reframe with evidence, never get defensive. Objection about experience? Point to outcomes at MathWorks/GE and products shipped solo. About seniority? An MBA at IIT Delhi plus hands-on shipping beats title inflation.
 - Every reply should end with momentum: a natural next step (email amanbanthia@gmail.com, grab the resume, or a sharp follow-up question about their needs). Vary the wording; never robotic, never desperate.
 
-SUGGESTIONS PROTOCOL (mandatory): after your answer, on its own final line, write exactly:
-SUGGESTIONS: <q1> | <q2> | <q3>
-Three short follow-up questions (max 8 words each), phrased from the VISITOR's perspective, chosen to move the conversation toward hiring or contacting Aman, and relevant to what was just discussed. Never repeat a question already asked in this conversation.
+SUGGESTIONS (mandatory): the final line of your output must be exactly this format and nothing after it:
+SUGGESTIONS: question one | question two | question three
+They are the visitor's likely next questions (short, a few words each), relevant to what was just said and nudging toward hiring or contacting Aman. Do not number them, quote them, or explain them. Just the three, pipe-separated.
 
 FACTS (the only source of truth — never invent beyond this):
 
@@ -132,6 +134,8 @@ export default {
         models, // all ':free'; OpenRouter falls back among them if one is busy
         // Hard price ceiling: reject ANY provider that would cost money.
         provider: { max_price: ZERO_PRICE, allow_fallbacks: true },
+        // Suppress chain-of-thought so reasoning models don't dump planning into the reply.
+        reasoning: { enabled: false, exclude: true },
         max_tokens: MAX_TOKENS,
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
       }),
@@ -153,9 +157,13 @@ export default {
     }
 
     const data = await res.json();
-    const raw = data.choices?.[0]?.message?.content || '…';
+    // Strip any reasoning the model still leaks (think-tags, channel markers).
+    const raw = (data.choices?.[0]?.message?.content || '…')
+      .replace(/<think>[\s\S]*?<\/think>/gi, '')
+      .replace(/<\|[\s\S]*?\|>/g, '')
+      .trim();
     // Split off the SUGGESTIONS line so the visible/spoken reply stays clean.
-    const m = raw.match(/^([\s\S]*?)\n?\s*SUGGESTIONS:\s*(.+)\s*$/i);
+    const m = raw.match(/^([\s\S]*?)\n?\s*SUGGESTIONS:\s*(.+?)\s*$/i);
     const reply = (m ? m[1] : raw).trim() || '…';
     const suggestions = m
       ? m[2].split('|').map((s) => s.trim().replace(/^["'\-\d.\s]+|["']+$/g, '')).filter((s) => s.length > 2 && s.length <= 80).slice(0, 3)
