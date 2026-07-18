@@ -115,8 +115,9 @@ export default {
     }
 
     // Guardrail: resolve a ':free'-only model set. Anything non-free is dropped.
+    // OpenRouter caps the `models` fallback array at 3 items.
     const primary = isFree(env.MODEL) ? env.MODEL : FREE_DEFAULT;
-    const models = [primary, ...FREE_MODELS].filter((m, i, a) => isFree(m) && a.indexOf(m) === i);
+    const models = [...new Set([primary, ...FREE_MODELS])].filter(isFree).slice(0, 3);
 
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
