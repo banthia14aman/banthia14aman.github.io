@@ -1,7 +1,7 @@
 name = "aman-portfolio-agent"
 main = "worker.js"
 compatibility_date = "2026-07-01"
-account_id = "f5fcca1f58582f5065f92d31afb03b7c"
+account_id = "9dada622b6defb3c8691f7b6c3e7862d"
 
 # Free-tier model. OpenRouter :free models are rate-limited (20 req/min;
 # 50 req/day, or 1000/day once $10 of credits has ever been purchased).
@@ -14,4 +14,4 @@ MODEL = "meta-llama/llama-3.3-70b-instruct:free"
 # per IP) so nobody can burn the free daily quota.
 [[kv_namespaces]]
 binding = "RL"
-id = "9470d7c3a856440da6dad10a0e43927f"
+id = "f3112a4ef40f43009249b526a4de7ee7"
