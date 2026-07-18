@@ -18,7 +18,7 @@ import Flow from './Flow.astro';
 
         <div class={`body${c.shot ? '' : ' solo'}`}>
           {c.shot && (
-            <a class="shot" href={c.href} target="_blank" rel="noopener" style={`--img:url(${c.shot})`} aria-label={`Open ${c.name}`}>
+            <a class="shot" href={c.href} target="_blank" rel="noopener" style={`--img:url(${c.shot});--g1:${(c.shotGlitch ?? ['#ff2f6e', '#2fe0ff'])[0]};--g2:${(c.shotGlitch ?? ['#ff2f6e', '#2fe0ff'])[1]}`} aria-label={`Open ${c.name}`}>
               <img src={c.shot} alt={`${c.name} screenshot`} loading="lazy" width="1280" height="800" />
               <span class="scan" aria-hidden="true"></span>
             </a>
@@ -81,8 +81,8 @@ import Flow from './Flow.astro';
     opacity: 0;
     pointer-events: none;
   }
-  .shot::before { background-color: #ff2f6e; }
-  .shot::after { background-color: #2fe0ff; }
+  .shot::before { background-color: var(--g1, #ff2f6e); }
+  .shot::after { background-color: var(--g2, #2fe0ff); }
   /* ghost image only fetched on hover — keeps all 6 shots off the initial load */
   .shot:hover::before, .shot:hover::after { background-image: var(--img); }
   .shot .scan {

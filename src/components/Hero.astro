@@ -10,6 +10,14 @@ import { hero, profile } from '../data/content';
     <h1 class="display">
       <span class="glitch" data-text={hero.lead}>{hero.lead}</span>
     </h1>
+
+    <p class="ai-pun" id="aiPun" title="Hover me" aria-label="AI, as in Aman Intelligence">
+      <span class="k mono">AI</span>
+      <span class="eq">=</span>
+      <span class="swap" id="aiWord">Artificial</span>
+      <span class="tail">Intelligence</span>
+    </p>
+
     <p class="sub">{hero.sub}</p>
     <div class="cta">
       <a class="btn btn-solid" href={`mailto:${profile.email}`}>Get in touch</a>
@@ -23,7 +31,6 @@ import { hero, profile } from '../data/content';
   header { position: relative; min-height: 100svh; display: flex; align-items: center; overflow: hidden; }
   #hero3d {
     position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0;
-    /* radial vignette so text stays legible over the point cloud */
     mask-image: radial-gradient(ellipse 70% 70% at 65% 45%, #000 40%, transparent 78%);
     -webkit-mask-image: radial-gradient(ellipse 70% 70% at 65% 45%, #000 40%, transparent 78%);
   }
@@ -37,8 +44,27 @@ import { hero, profile } from '../data/content';
     max-width: 14ch;
   }
   .glitch::selection { background: var(--accent); color: var(--ink); }
-  .sub { max-width: 60ch; margin-top: 28px; color: var(--text); font-size: clamp(16px, 1.8vw, 20px); }
-  .sub { font-weight: 300; }
+
+  /* AI = Aman Intelligence — scramble-glitch on hover */
+  .ai-pun {
+    display: inline-flex; align-items: center; gap: 12px; margin-top: 24px;
+    font-family: var(--font-display); font-weight: 500; letter-spacing: -0.01em;
+    font-size: clamp(19px, 3vw, 33px);
+    cursor: pointer; user-select: none;
+  }
+  .ai-pun .k {
+    font-size: 0.42em; letter-spacing: 0.22em; color: var(--dim);
+    border: 1px solid var(--faint); border-radius: 6px; padding: 4px 8px;
+    transition: color 0.25s, border-color 0.25s;
+  }
+  .ai-pun:hover .k { color: var(--accent); border-color: color-mix(in oklab, var(--accent) 45%, transparent); }
+  .ai-pun .eq { color: var(--dim); }
+  .ai-pun .tail { color: var(--paper); }
+  .swap { display: inline-block; min-width: 2.5ch; white-space: nowrap; color: var(--paper); transition: color 0.3s; }
+  .swap.on { color: var(--accent); text-shadow: 0 0 22px rgba(200, 255, 77, 0.45); }
+  .swap .dud { color: var(--accent); }
+
+  .sub { max-width: 60ch; margin-top: 28px; color: var(--text); font-size: clamp(16px, 1.8vw, 20px); font-weight: 300; }
   .cta { display: flex; gap: 14px; margin-top: 36px; flex-wrap: wrap; }
   .scrollcue { display: inline-block; margin-top: 54px; color: var(--dim); transition: color 0.2s; }
   .scrollcue:hover { color: var(--accent); }
@@ -49,4 +75,65 @@ import { hero, profile } from '../data/content';
   const start = () => initHero3D('hero3d');
   if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 1200 });
   else setTimeout(start, 300);
+
+  // ---- "Artificial" <-> "Aman" scramble-glitch ----
+  const CHARS = '!<>-_\\/[]{}—=+*^?#ABCDEF01';
+  class Scramble {
+    el: HTMLElement; queue: any[] = []; frame = 0; raf = 0; resolve: (() => void) | null = null;
+    constructor(el: HTMLElement) { this.el = el; }
+    to(newText: string) {
+      const old = this.el.textContent || '';
+      const len = Math.max(old.length, newText.length);
+      return new Promise<void>((res) => {
+        this.resolve = res; this.queue = [];
+        for (let i = 0; i < len; i++) {
+          const start = Math.floor(Math.random() * 16);
+          const end = start + Math.floor(Math.random() * 18) + 10;
+          this.queue.push({ from: old[i] || '', to: newText[i] || '', start, end, char: '' });
+        }
+        cancelAnimationFrame(this.raf); this.frame = 0; this.update();
+      });
+    }
+    update() {
+      let out = '', done = 0;
+      for (const q of this.queue) {
+        if (this.frame >= q.end) { done++; out += q.to; }
+        else if (this.frame >= q.start) {
+          if (!q.char || Math.random() < 0.28) q.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+          out += `<span class="dud">${q.char}</span>`;
+        } else out += q.from;
+      }
+      this.el.innerHTML = out;
+      if (done === this.queue.length) { this.resolve && this.resolve(); }
+      else { this.frame++; this.raf = requestAnimationFrame(() => this.update()); }
+    }
+  }
+
+  const word = document.getElementById('aiWord');
+  const pun = document.getElementById('aiPun');
+  if (word && pun) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const sc = new Scramble(word);
+    let state = 'Artificial';
+    function morph(t: string) {
+      if (state === t) return;
+      state = t;
+      word!.classList.toggle('on', t === 'Aman');
+      if (reduce) { word!.textContent = t; } else { sc.to(t); }
+    }
+    pun.addEventListener('mouseenter', () => morph('Aman'));
+    pun.addEventListener('mouseleave', () => morph('Artificial'));
+    pun.addEventListener('click', () => morph(state === 'Aman' ? 'Artificial' : 'Aman'));
+    // one-time hint so the pun is discoverable without hovering
+    if (!reduce) {
+      setTimeout(async () => {
+        if (state !== 'Artificial') return;
+        state = 'Aman'; word.classList.add('on'); await sc.to('Aman');
+        setTimeout(async () => {
+          if (state !== 'Aman') return;
+          state = 'Artificial'; word.classList.remove('on'); await sc.to('Artificial');
+        }, 1500);
+      }, 1600);
+    }
+  }
 </script>

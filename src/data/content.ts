@@ -54,6 +54,7 @@ export type CaseStudy = {
   outcome: string;
   flow?: string; // key of a flow diagram
   shot?: string; // path to a real screenshot in /public/shots
+  shotGlitch?: [string, string]; // two hover-glitch colors sampled from the screenshot
 };
 
 export const caseStudies: CaseStudy[] = [
@@ -67,6 +68,7 @@ export const caseStudies: CaseStudy[] = [
     outcome: 'The data-entry step disappears. The CRM fills itself from how agents already work, instead of asking them to change.',
     flow: 'sampoorna',
     shot: '/shots/sampoorna.jpg',
+    shotGlitch: ['#4361ff', '#a855f7'], // its blue→violet "by voice" gradient
   },
   {
     year: '2026',
@@ -78,6 +80,7 @@ export const caseStudies: CaseStudy[] = [
     outcome: 'AI-speed exploration with audit-grade trust: byte-identical replays and full provenance on every number.',
     flow: 'trinetra',
     shot: '/shots/trinetra.jpg',
+    shotGlitch: ['#f2a63b', '#3fd0e0'], // amber terminal + cyan supply-route lines
   },
   {
     year: '2026',
@@ -89,6 +92,7 @@ export const caseStudies: CaseStudy[] = [
     outcome: 'Prep time gets spent where it moves the needle, personalized at scale instead of by a coach’s guess.',
     flow: 'casecompass',
     shot: '/shots/casecompass.jpg',
+    shotGlitch: ['#34d399', '#22b8cf'], // its emerald "LIVE" green + teal
   },
   {
     year: '2026',
@@ -99,6 +103,7 @@ export const caseStudies: CaseStudy[] = [
     solution: 'A deliberately lean LMS: marketing site plus student, teacher, and admin portals, with all copy and course data in plain editable files. No framework, no build step.',
     outcome: 'A full academy platform that a non-technical team can actually run and edit day to day.',
     shot: '/shots/navkar-academy.jpg',
+    shotGlitch: ['#f5b301', '#3b6fe0'], // its gold CTA + navy/blue
   },
   {
     year: '2026',
@@ -109,6 +114,7 @@ export const caseStudies: CaseStudy[] = [
     solution: 'A fast static Astro site with a considered GSAP + Lenis motion system, structured so the client can confirm copy without touching code.',
     outcome: 'A credible digital front door for the project, quick to load and easy to keep current.',
     shot: '/shots/navkar-crest.jpg',
+    shotGlitch: ['#c9a24b', '#3f7d5f'], // its gold linework + dark green
   },
   {
     year: '2026',
@@ -119,6 +125,7 @@ export const caseStudies: CaseStudy[] = [
     solution: 'A dark-industrial React site with a real WebGL excavator in the hero that articulates and digs as you scroll, and a single content file so every spec and number stays editable.',
     outcome: 'A site that both converts and demonstrates capability, without locking the client out of their own content.',
     shot: '/shots/jain.jpg',
+    shotGlitch: ['#e0a422', '#ff7a3d'], // its amber machinery + burnt orange dust
   },
   {
     year: '2025',
