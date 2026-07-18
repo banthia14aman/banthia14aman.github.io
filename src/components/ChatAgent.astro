@@ -31,8 +31,8 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
   </div>
 
   <div class="chips" id="chatChips">
-    <button>What has Aman built?</button>
-    <button>How does he approach product?</button>
+    <button>What could Aman do for my team?</button>
+    <button>Show me his strongest AI product</button>
     <button>Why hire him for a PM role?</button>
   </div>
 
@@ -146,9 +146,19 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
   document.getElementById('chatClose').addEventListener('click', closePanel);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel.classList.contains('open')) closePanel(); });
 
-  document.getElementById('chatChips').addEventListener('click', (e) => {
+  const chips = document.getElementById('chatChips');
+  chips.addEventListener('click', (e) => {
     if (e.target.tagName === 'BUTTON') send(e.target.textContent, false);
   });
+  function renderChips(suggestions) {
+    if (!Array.isArray(suggestions) || suggestions.length < 2) return;
+    chips.textContent = '';
+    for (const s of suggestions) {
+      const b = document.createElement('button');
+      b.textContent = s;
+      chips.appendChild(b);
+    }
+  }
   document.getElementById('chatSend').addEventListener('click', () => send(input.value, false));
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) send(input.value, false); });
 
@@ -181,6 +191,7 @@ const AGENT_URL = 'https://aman-portfolio-agent.sampoornacrm.workers.dev/chat';
       addMsg('bot', reply);
       if (data.reply) {
         history.push({ role: 'assistant', content: data.reply });
+        renderChips(data.suggestions);
         if (voiceOn) speak(reply);
       }
     } catch {
